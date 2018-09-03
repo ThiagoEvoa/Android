@@ -6,12 +6,13 @@
     <string name="nav_header_subtitle">App for study</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_client">ClientActivity</string>
-    <string name="title_activity_professional">ProfessionalActivity</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_schedule_detail">ScheduleDetailActivity</string>
-    <string name="title_activity_client_detail">ClientDetailActivity</string>
-    <string name="title_activity_professional_detail">ProfessionalDetailActivity</string>
+
+    <!-- Activities -->
+    <string name="title_activity_client">Clients</string>
+    <string name="title_activity_client_detail">Client</string>
+    <string name="title_activity_professional">Professionals</string>
+    <string name="title_activity_professional_detail">Professional</string>
+    <string name="title_activity_schedule">Schedules</string>
+    <string name="title_activity_schedule_detail">Schedule</string>
 </resources>

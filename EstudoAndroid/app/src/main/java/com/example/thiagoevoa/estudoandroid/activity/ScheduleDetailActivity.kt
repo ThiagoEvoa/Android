@@ -1,5 +1,6 @@
 package com.example.thiagoevoa.estudoandroid.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -34,6 +35,11 @@ class ScheduleDetailActivity : AppCompatActivity(), NavigationView.OnNavigationI
                 .replace(R.id.detail_schedule, ScheduleDetailFragment().newInstance(schedule), SCHEDULE_DETAIL_FRAGMENT).commit()
     }
 
+    override fun onResume() {
+        super.onResume()
+        nav_view.menu.findItem(R.id.nav_schedule).isChecked = true
+    }
+
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -42,40 +48,19 @@ class ScheduleDetailActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        menuInflater.inflate(R.menu.menu, menu)
-//        menu.findItem(R.id.action_save).isVisible = true
-//        return true
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return when (item.itemId) {
-//            R.id.action_save ->{
-//                Toast.makeText(this, "Action Save", Toast.LENGTH_LONG).show()
-//                true
-//            }
-//            R.id.action_delete-> {
-//                Toast.makeText(this, "Action Delete", Toast.LENGTH_LONG).show()
-//                true
-//            }
-//            R.id.action_search-> {
-//                Toast.makeText(this, "Action Search", Toast.LENGTH_LONG).show()
-//                true
-//            }
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_schedule -> {
-
+                startActivity(Intent(this, ScheduleActivity::class.java))
+                finish()
             }
             R.id.nav_professional -> {
-
+                startActivity(Intent(this, ProfessionalActivity::class.java))
+                finish()
             }
             R.id.nav_client -> {
-
+                startActivity(Intent(this, ClientActivity::class.java))
+                finish()
             }
             R.id.nav_tools -> {
 

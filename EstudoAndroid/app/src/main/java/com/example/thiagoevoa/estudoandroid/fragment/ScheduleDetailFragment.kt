@@ -82,7 +82,8 @@ class ScheduleDetailFragment : Fragment() {
     }
 
     private fun mountSchedule(): Schedule {
-        return Schedule(schedule?._id, edt_date.text.toString(),
+        return Schedule(schedule?._id,
+                edt_date.text.toString(),
                 edt_initial_time.text.toString(),
                 edt_final_time.text.toString(),
                 edt_client.text.toString(),

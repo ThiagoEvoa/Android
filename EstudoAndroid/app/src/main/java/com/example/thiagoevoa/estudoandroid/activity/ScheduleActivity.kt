@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
 import com.example.thiagoevoa.estudoandroid.R
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.app_bar_schedule.*
 
 class ScheduleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var menuDelete: MenuItem? = null
+    private var searchView: SearchView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +37,14 @@ class ScheduleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         nav_view.setNavigationItemSelectedListener(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        nav_view.menu.findItem(R.id.nav_schedule).isChecked = true
+    }
+
     override fun onBackPressed() {
         when {
-            menuDelete!!.isVisible -> {
+            !searchView!!.isIconified || menuDelete!!.isVisible -> {
                 (supportFragmentManager.fragments[0] as ScheduleListFragment).resetMenuIcons()
             }
             drawer_layout.isDrawerOpen(GravityCompat.START) -> {
@@ -57,26 +64,12 @@ class ScheduleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         menuDelete = menu.findItem(R.id.action_delete)
+
+        val menuItem = menu?.findItem(R.id.action_search)
+        searchView = menuItem?.actionView as SearchView
+
         return true
     }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return when (item.itemId) {
-//            R.id.action_save ->{
-//                Toast.makeText(this, "Action Save", Toast.LENGTH_LONG).show()
-//                true
-//            }
-//            R.id.action_delete-> {
-//                Toast.makeText(this, "Action Delete", Toast.LENGTH_LONG).show()
-//                true
-//            }
-//            R.id.action_search-> {
-//                Toast.makeText(this, "Action Search", Toast.LENGTH_LONG).show()
-//                true
-//            }
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

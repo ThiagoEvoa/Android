@@ -5,6 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".fragment.ScheduleListFragment">
 
+    <TextView
+        android:id="@+id/txt_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_schedule"
         android:layout_width="match_parent"
@@ -13,7 +20,7 @@
         <ListView
             android:id="@+id/listView_schedule_fragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

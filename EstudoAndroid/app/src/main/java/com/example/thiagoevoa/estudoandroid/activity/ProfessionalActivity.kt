@@ -1,20 +1,23 @@
 package com.example.thiagoevoa.estudoandroid.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
-import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import com.example.thiagoevoa.estudoandroid.R
+import com.example.thiagoevoa.estudoandroid.fragment.ProfessionalListFragment
 import kotlinx.android.synthetic.main.activity_professional.*
 import kotlinx.android.synthetic.main.app_bar_professional.*
 
 
 class ProfessionalActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private var menuDelete: MenuItem? = null
+    private var searchView: SearchView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +25,7 @@ class ProfessionalActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         setSupportActionBar(toolbar_professional)
 
         btn_add_professional.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            startActivity(Intent(view.context, ProfessionalDetailActivity::class.java))
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -34,47 +36,44 @@ class ProfessionalActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         nav_view.setNavigationItemSelectedListener(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        nav_view.menu.findItem(R.id.nav_professional).isChecked = true
+    }
+
     override fun onBackPressed() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
+        when {
+            !searchView!!.isIconified || menuDelete!!.isVisible -> {
+                (supportFragmentManager.fragments[0] as ProfessionalListFragment).resetMenuIcons()
+            }
+            drawer_layout.isDrawerOpen(GravityCompat.START) -> {
+                drawer_layout.closeDrawer(GravityCompat.START)
+            }
+            else -> super.onBackPressed()
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
-        return true
-    }
+        menuDelete = menu.findItem(R.id.action_delete)
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_save ->{
-                Toast.makeText(this, "Action Save", Toast.LENGTH_LONG).show()
-                true
-            }
-            R.id.action_delete-> {
-                Toast.makeText(this, "Action Delete", Toast.LENGTH_LONG).show()
-                true
-            }
-            R.id.action_search-> {
-                Toast.makeText(this, "Action Search", Toast.LENGTH_LONG).show()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+        val menuItem = menu?.findItem(R.id.action_search)
+        searchView = menuItem?.actionView as SearchView
+        return true
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_schedule -> {
-
+                startActivity(Intent(this, ScheduleActivity::class.java))
+                finish()
             }
             R.id.nav_professional -> {
 
             }
             R.id.nav_client -> {
-
+                startActivity(Intent(this, ClientActivity::class.java))
+                finish()
             }
             R.id.nav_tools -> {
 

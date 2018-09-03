@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.ScheduleActivity"
-            android:label="@string/app_name"
+            android:label="@string/title_activity_schedule"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,20 +26,20 @@
             android:label="@string/title_activity_client"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.ProfessionalActivity"
-            android:label="@string/title_activity_professional"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activity.ScheduleDetailActivity"
-            android:label="@string/title_activity_schedule_detail"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activity.ClientDetailActivity"
             android:label="@string/title_activity_client_detail"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activity.ProfessionalActivity"
+            android:label="@string/title_activity_professional"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activity.ProfessionalDetailActivity"
             android:label="@string/title_activity_professional_detail"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.ScheduleDetailActivity"
+            android:label="@string/title_activity_schedule_detail"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
