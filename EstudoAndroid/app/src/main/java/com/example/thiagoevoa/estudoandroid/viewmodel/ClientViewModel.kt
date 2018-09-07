@@ -52,7 +52,7 @@ class ClientViewModel : ViewModel() {
                             Request.Builder().url("$HOST$URL_CLIENT").build()).execute()
                 } else {
                     OkHttpClient().newCall(
-                            Request.Builder().url("$HOST$URL_CLIENT/${params[0]}").build()).execute()
+                            Request.Builder().url("$HOST$URL_CLIENT/cpf/${params[0]}").build()).execute()
                 }
 
 
@@ -74,7 +74,7 @@ class ClientViewModel : ViewModel() {
             clientsLiveData.value = result
 
             if (clientsLiveData.value?.size == 0) {
-                txtMessage?.text = "Teste mensagem"
+                txtMessage?.text = "There is no client with those data"
                 txtMessage?.visibility = View.VISIBLE
             } else {
                 txtMessage?.visibility = View.GONE

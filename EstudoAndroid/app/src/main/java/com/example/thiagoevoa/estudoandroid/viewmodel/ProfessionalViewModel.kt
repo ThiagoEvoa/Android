@@ -52,7 +52,7 @@ class ProfessionalViewModel : ViewModel() {
                             Request.Builder().url("$HOST$URL_PROFESSIONAL").build()).execute()
                 } else {
                     OkHttpClient().newCall(
-                            Request.Builder().url("$HOST$URL_PROFESSIONAL/${params[0]}").build()).execute()
+                            Request.Builder().url("$HOST$URL_PROFESSIONAL/cpf_cnpj/${params[0]}").build()).execute()
                 }
 
                 val jsonString = response?.body()?.string()
@@ -72,7 +72,7 @@ class ProfessionalViewModel : ViewModel() {
             professionalsLiveData.value = result
 
             if (professionalsLiveData.value?.size == 0) {
-                txtMessage?.text = "Teste mensagem"
+                txtMessage?.text = "There is no professional with those data"
                 txtMessage?.visibility = View.VISIBLE
             } else {
                 txtMessage?.visibility = View.GONE

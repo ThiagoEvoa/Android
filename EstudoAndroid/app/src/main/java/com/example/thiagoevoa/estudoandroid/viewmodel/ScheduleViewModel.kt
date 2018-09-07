@@ -52,7 +52,7 @@ class ScheduleViewModel : ViewModel() {
                             Request.Builder().url("$HOST$URL_SCHEDULE").build()).execute()
                 } else {
                     OkHttpClient().newCall(
-                            Request.Builder().url("$HOST$URL_SCHEDULE/${params[0]}").build()).execute()
+                            Request.Builder().url("$HOST$URL_SCHEDULE/clientid/${params[0]}").build()).execute()
                 }
 
                 val jsonString = response?.body()?.string()
@@ -72,7 +72,7 @@ class ScheduleViewModel : ViewModel() {
             schedulesLiveData.value = result
 
             if (schedulesLiveData.value?.size == 0) {
-                txtMessage?.text = "Teste mensagem"
+                txtMessage?.text = "There is no schedule with those data"
                 txtMessage?.visibility = View.VISIBLE
             } else {
                 txtMessage?.visibility = View.GONE
