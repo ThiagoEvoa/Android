@@ -52,7 +52,7 @@ class ProfessionalViewModel : ViewModel() {
                             Request.Builder().url("$HOST$URL_PROFESSIONAL").build()).execute()
                 } else {
                     OkHttpClient().newCall(
-                            Request.Builder().url("$HOST$URL_PROFESSIONAL/cpf_cnpj/${params[0]}").build()).execute()
+                            Request.Builder().url("$HOST$URL_PROFESSIONAL/cpfcnpj/${params[0]}").build()).execute()
                 }
 
                 val jsonString = response?.body()?.string()
