@@ -87,11 +87,10 @@ class ScheduleListFragment : Fragment(), AdapterView.OnItemClickListener, Adapte
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if (resources.getBoolean(R.bool.tablet)) {
-            viewModel.scheduleLiveData.value = viewModel.schedulesLiveData.value?.get(position)
             activity!!.supportFragmentManager
                     .beginTransaction()
                     .addToBackStack(null)
-                    .replace(R.id.detail_schedule, ScheduleDetailFragment(), SCHEDULE_DETAIL_FRAGMENT).commit()
+                    .replace(R.id.detail_schedule, ScheduleDetailFragment().newInstance(viewModel.schedulesLiveData.value?.get(position)), SCHEDULE_DETAIL_FRAGMENT).commit()
         } else {
             val intent = Intent(activity!!.baseContext, ScheduleDetailActivity::class.java)
             intent.putExtra(EXTRA_SCHEDULE, viewModel.schedulesLiveData.value?.get(position))
