@@ -12,15 +12,21 @@ import com.example.thiagoevoa.estudoandroid.fragment.ScheduleDetailFragment
 import com.example.thiagoevoa.estudoandroid.model.Schedule
 import com.example.thiagoevoa.estudoandroid.util.EXTRA_SCHEDULE
 import com.example.thiagoevoa.estudoandroid.util.SCHEDULE_DETAIL_FRAGMENT
+import com.example.thiagoevoa.estudoandroid.util.deleteSharedPreference
+import com.example.thiagoevoa.estudoandroid.util.logout
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_schedule_detail.*
 import kotlinx.android.synthetic.main.app_bar_schedule_detail.*
 
 class ScheduleDetailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private var auth: FirebaseAuth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_schedule_detail)
         setSupportActionBar(toolbar_schedule_detail)
+
+        auth = FirebaseAuth.getInstance()
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar_schedule_detail, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -69,7 +75,9 @@ class ScheduleDetailActivity : AppCompatActivity(), NavigationView.OnNavigationI
 
             }
             R.id.nav_logout -> {
-
+                logout(auth!!)
+                deleteSharedPreference(this)
+                finish()
             }
         }
 

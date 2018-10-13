@@ -11,6 +11,9 @@ import android.view.Menu
 import android.view.MenuItem
 import com.example.thiagoevoa.estudoandroid.R
 import com.example.thiagoevoa.estudoandroid.fragment.ClientListFragment
+import com.example.thiagoevoa.estudoandroid.util.deleteSharedPreference
+import com.example.thiagoevoa.estudoandroid.util.logout
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_client.*
 import kotlinx.android.synthetic.main.app_bar_client.*
 
@@ -18,11 +21,14 @@ import kotlinx.android.synthetic.main.app_bar_client.*
 class ClientActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var menuDelete: MenuItem? = null
     private var searchView: SearchView? = null
+    private var auth: FirebaseAuth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_client)
         setSupportActionBar(toolbar_client)
+
+        auth = FirebaseAuth.getInstance()
 
         btn_add_client.setOnClickListener { view ->
             startActivity(Intent(view.context, ClientDetailActivity::class.java))
@@ -82,7 +88,9 @@ class ClientActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
             }
             R.id.nav_logout -> {
-
+                logout(auth!!)
+                deleteSharedPreference(this)
+                finish()
             }
         }
 

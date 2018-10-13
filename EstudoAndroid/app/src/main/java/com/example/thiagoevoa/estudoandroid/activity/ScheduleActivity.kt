@@ -1,6 +1,5 @@
 package com.example.thiagoevoa.estudoandroid.activity
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -13,17 +12,23 @@ import android.view.Menu
 import android.view.MenuItem
 import com.example.thiagoevoa.estudoandroid.R
 import com.example.thiagoevoa.estudoandroid.fragment.ScheduleListFragment
+import com.example.thiagoevoa.estudoandroid.util.deleteSharedPreference
+import com.example.thiagoevoa.estudoandroid.util.logout
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_schedule.*
 import kotlinx.android.synthetic.main.app_bar_schedule.*
 
 class ScheduleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var menuDelete: MenuItem? = null
     private var searchView: SearchView? = null
+    private var auth: FirebaseAuth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_schedule)
         setSupportActionBar(toolbar_schedule)
+
+        auth = FirebaseAuth.getInstance()
 
         btn_add_schedule.setOnClickListener { view ->
             startActivity(Intent(view.context, ScheduleDetailActivity::class.java))
@@ -52,10 +57,10 @@ class ScheduleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             }
             else -> {
                 AlertDialog.Builder(this).setTitle("Warning!").setMessage("Would you like to close application?")
-                        .setPositiveButton("yes", DialogInterface.OnClickListener { dialog, which ->
+                        .setPositiveButton("yes") { dialog, which ->
                             super.onBackPressed()
-                        })
-                        .setNegativeButton("no", DialogInterface.OnClickListener { dialog, which -> })
+                        }
+                        .setNegativeButton("no") { dialog, which -> }
                         .create().show()
             }
         }
@@ -89,7 +94,9 @@ class ScheduleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
             }
             R.id.nav_logout -> {
-
+                logout(auth!!)
+                deleteSharedPreference(this)
+                finish()
             }
         }
 

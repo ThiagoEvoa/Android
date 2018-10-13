@@ -13,15 +13,21 @@ import com.example.thiagoevoa.estudoandroid.fragment.ProfessionalDetailFragment
 import com.example.thiagoevoa.estudoandroid.model.Professional
 import com.example.thiagoevoa.estudoandroid.util.EXTRA_PROFESSIONAL
 import com.example.thiagoevoa.estudoandroid.util.PROFESSIONAL_DETAIL_FRAGMENT
+import com.example.thiagoevoa.estudoandroid.util.deleteSharedPreference
+import com.example.thiagoevoa.estudoandroid.util.logout
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_professional_detail.*
 import kotlinx.android.synthetic.main.app_bar_professional_detail.*
 
 class ProfessionalDetailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private var auth: FirebaseAuth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_professional_detail)
         setSupportActionBar(toolbar_professional_detail)
+
+        auth = FirebaseAuth.getInstance()
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar_professional_detail, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -75,7 +81,9 @@ class ProfessionalDetailActivity : AppCompatActivity(), NavigationView.OnNavigat
 
             }
             R.id.nav_logout -> {
-
+                logout(auth!!)
+                deleteSharedPreference(this)
+                finish()
             }
         }
 

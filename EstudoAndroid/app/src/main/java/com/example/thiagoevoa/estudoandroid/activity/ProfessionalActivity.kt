@@ -11,6 +11,9 @@ import android.view.Menu
 import android.view.MenuItem
 import com.example.thiagoevoa.estudoandroid.R
 import com.example.thiagoevoa.estudoandroid.fragment.ProfessionalListFragment
+import com.example.thiagoevoa.estudoandroid.util.deleteSharedPreference
+import com.example.thiagoevoa.estudoandroid.util.logout
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_professional.*
 import kotlinx.android.synthetic.main.app_bar_professional.*
 
@@ -18,11 +21,14 @@ import kotlinx.android.synthetic.main.app_bar_professional.*
 class ProfessionalActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var menuDelete: MenuItem? = null
     private var searchView: SearchView? = null
+    private var auth: FirebaseAuth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_professional)
         setSupportActionBar(toolbar_professional)
+
+        auth = FirebaseAuth.getInstance()
 
         btn_add_professional.setOnClickListener { view ->
             startActivity(Intent(view.context, ProfessionalDetailActivity::class.java))
@@ -82,7 +88,9 @@ class ProfessionalActivity : AppCompatActivity(), NavigationView.OnNavigationIte
 
             }
             R.id.nav_logout -> {
-
+                logout(auth!!)
+                deleteSharedPreference(this)
+                finish()
             }
         }
 

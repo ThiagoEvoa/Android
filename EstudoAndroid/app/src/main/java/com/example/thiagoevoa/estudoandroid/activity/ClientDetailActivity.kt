@@ -12,15 +12,21 @@ import com.example.thiagoevoa.estudoandroid.fragment.ClientDetailFragment
 import com.example.thiagoevoa.estudoandroid.model.Client
 import com.example.thiagoevoa.estudoandroid.util.CLIENT_DETAIL_FRAGMENT
 import com.example.thiagoevoa.estudoandroid.util.EXTRA_CLIENT
+import com.example.thiagoevoa.estudoandroid.util.deleteSharedPreference
+import com.example.thiagoevoa.estudoandroid.util.logout
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_client_detail.*
 import kotlinx.android.synthetic.main.app_bar_client_detail.*
 
 class ClientDetailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private var auth: FirebaseAuth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_client_detail)
         setSupportActionBar(toolbar_client_detail)
+
+        auth = FirebaseAuth.getInstance()
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar_client_detail, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -69,7 +75,9 @@ class ClientDetailActivity : AppCompatActivity(), NavigationView.OnNavigationIte
 
             }
             R.id.nav_logout -> {
-
+                logout(auth!!)
+                deleteSharedPreference(this)
+                finish()
             }
         }
 

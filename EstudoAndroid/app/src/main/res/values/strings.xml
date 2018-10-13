@@ -6,6 +6,11 @@
     <string name="nav_header_subtitle">App for study</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="hint_email">e-mail</string>
+    <string name="hint_password">password</string>
+    <string name="btn_login">login</string>
+    <string name="txt_forget_password">Forgot your password?</string>
+    <string name="txt_create_user">Create new account</string>
 
 
     <!-- Activities -->
@@ -15,4 +20,21 @@
     <string name="title_activity_professional_detail">Professional</string>
     <string name="title_activity_schedule">Schedules</string>
     <string name="title_activity_schedule_detail">Schedule</string>
+
+    <!-- Success Messages -->
+    <string name="success_create_user">Account created successfully.</string>
+    <string name="success_update_email">E-mail updated successfully.</string>
+    <string name="success_update_password">Password updated successfully.</string>
+    <string name="success_delete_user">Account deleted successfully.</string>
+    <string name="success_send_email">Whe send an e-mail to reset the password.</string>
+
+    <!-- Error Messages -->
+    <string name="error_edt_email">Fill the e-email field to continue.</string>
+    <string name="error_edt_password">Fill the password field to continue.</string>
+    <string name="error_login">Error while trying to login on application.</string>
+    <string name="error_create_user">Error while creating account.</string>
+    <string name="error_update_email">Error while updating e-mail.</string>
+    <string name="error_update_password">Error while updating password.</string>
+    <string name="error_delete_user">Error while trying deleting account.</string>
+    <string name="error_send_email">Error while sending an e-mail to reset the password.</string>
 </resources>

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "235531063218",
+    "firebase_url": "https://estudoandroid-ab3f3.firebaseio.com",
+    "project_id": "estudoandroid-ab3f3",
+    "storage_bucket": "estudoandroid-ab3f3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235531063218:android:0c34b7018bae9dcb",
+        "android_client_info": {
+          "package_name": "com.example.thiagoevoa.estudoandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "235531063218-kngkd6b9inn7n0koovc0nm2c7ec2nevn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBp2MTdT-_3BJgKhm8zzVlO1RsZP0W-cL0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
