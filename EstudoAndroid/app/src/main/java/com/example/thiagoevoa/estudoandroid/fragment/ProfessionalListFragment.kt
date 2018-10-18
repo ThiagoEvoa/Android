@@ -11,22 +11,25 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.AdapterView
+import android.widget.TextView
 import com.example.thiagoevoa.estudoandroid.R
 import com.example.thiagoevoa.estudoandroid.activity.ProfessionalDetailActivity
 import com.example.thiagoevoa.estudoandroid.adapter.ProfessionalAdapter
-import com.example.thiagoevoa.estudoandroid.util.EXTRA_PROFESSIONAL
-import com.example.thiagoevoa.estudoandroid.util.PROFESSIONAL_DETAIL_FRAGMENT
+import com.example.thiagoevoa.estudoandroid.asynctask.DeleteAsyncTask
+import com.example.thiagoevoa.estudoandroid.asynctask.ListAsyncTask
+import com.example.thiagoevoa.estudoandroid.util.*
 import com.example.thiagoevoa.estudoandroid.viewmodel.ProfessionalViewModel
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_professional_list.view.*
-import kotlinx.android.synthetic.main.fragment_schedule_list.view.*
 
-class ProfessionalListFragment : Fragment(), AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, SearchView.OnQueryTextListener {
+class ProfessionalListFragment : Fragment() {
     internal var view: View? = null
     internal var menu: Menu? = null
     private var row: View? = null
     private var menuDelete: MenuItem? = null
     private var menuSearch: MenuItem? = null
     private var searchView: SearchView? = null
+    private var txtMessage: TextView? = null
     private val viewModel: ProfessionalViewModel by lazy {
         ViewModelProviders.of(this).get(ProfessionalViewModel::class.java)
     }
@@ -39,20 +42,21 @@ class ProfessionalListFragment : Fragment(), AdapterView.OnItemClickListener, Ad
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         view = inflater.inflate(R.layout.fragment_professional_list, container, false)
-
-        view?.listView_professional_fragment?.onItemClickListener = this
-        view?.listView_professional_fragment?.onItemLongClickListener = this
-        refresh(view)
-
+        initView()
         return view
     }
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.ListAllProfessionalsAsyncTask(view).status != AsyncTask.Status.RUNNING) {
-            viewModel.ListAllProfessionalsAsyncTask(view).execute()
-
+        if (ListAsyncTask(URL_PROFESSIONAL).status != AsyncTask.Status.RUNNING) {
+            refreshList()
             viewModel.professionalsLiveData.observe(this, Observer {
+                if (it?.size == 0) {
+                    txtMessage?.text = resources.getString(R.string.success_no_professional)
+                    txtMessage?.visibility = View.VISIBLE
+                } else {
+                    txtMessage?.visibility = View.GONE
+                }
                 view?.listView_professional_fragment!!.adapter = ProfessionalAdapter(activity!!.baseContext, it)
             })
         }
@@ -67,8 +71,17 @@ class ProfessionalListFragment : Fragment(), AdapterView.OnItemClickListener, Ad
 
         val menuItem = menu?.findItem(R.id.action_search)
         searchView = menuItem?.actionView as SearchView
-        searchView?.setOnQueryTextListener(this)
 
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.professionalsLiveData.value = getProfessionalFromJSON(ListAsyncTask(URL_PROFESSIONAL).execute(query).get())
+                return false
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                return false
+            }
+        })
         menuSearch?.isVisible = true
     }
 
@@ -78,65 +91,72 @@ class ProfessionalListFragment : Fragment(), AdapterView.OnItemClickListener, Ad
                 true
             }
             R.id.action_delete -> {
-                viewModel.DeleteProfessionalAsyncTask(view, menu).execute()
+                if (DeleteAsyncTask(URL_PROFESSIONAL, Gson().toJson(viewModel.professionalLiveData.value)).execute().get() == RESPONSE_OK) {
+                    menuDelete?.isVisible = false
+                    menuSearch?.isVisible = true
+                    refreshList()
+                    showToast(activity!!.baseContext, resources.getString(R.string.success_delete_user))
+                } else {
+                    showToast(activity!!.baseContext, resources.getString(R.string.error_delete_user))
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        if (resources.getBoolean(R.bool.tablet)) {
+    private fun initView() {
+        txtMessage = view?.txt_professional_message
+
+        view?.swipe_professional?.setOnRefreshListener {
+            refreshList()
+        }
+
+        view?.listView_professional_fragment?.onItemClickListener = (AdapterView.OnItemClickListener
+        { parent, view, position, id ->
+            if (resources.getBoolean(R.bool.tablet)) {
+                viewModel.professionalLiveData.value = viewModel.professionalsLiveData.value?.get(position)
+                activity!!.supportFragmentManager
+                        .beginTransaction()
+                        .addToBackStack(null)
+                        .replace(R.id.detail_professional, ProfessionalDetailFragment(), PROFESSIONAL_DETAIL_FRAGMENT).commit()
+            } else {
+                val intent = Intent(activity!!.baseContext, ProfessionalDetailActivity::class.java)
+                intent.putExtra(EXTRA_PROFESSIONAL, viewModel.professionalsLiveData.value?.get(position))
+                activity!!.startActivity(intent)
+            }
+        })
+
+        view?.listView_professional_fragment?.onItemLongClickListener = (AdapterView.OnItemLongClickListener
+        { parent, view, position, id ->
+            row = if (row == null) {
+                view
+            } else {
+                row!!.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.colorWhite))
+                view
+            }
+            menuSearch?.isVisible = false
+            view!!.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.material_grey_300))
+            menuDelete?.isEnabled = true
+            menuDelete?.isVisible = true
             viewModel.professionalLiveData.value = viewModel.professionalsLiveData.value?.get(position)
-            activity!!.supportFragmentManager
-                    .beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.detail_professional, ProfessionalDetailFragment(), PROFESSIONAL_DETAIL_FRAGMENT).commit()
-        } else {
-            val intent = Intent(activity!!.baseContext, ProfessionalDetailActivity::class.java)
-            intent.putExtra(EXTRA_PROFESSIONAL, viewModel.professionalsLiveData.value?.get(position))
-            activity!!.startActivity(intent)
-        }
+            true
+        })
     }
 
-    override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
-        row = if(row == null){
-            view
-        }else{
-            row!!.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.colorWhite))
-            view
-        }
-
-        menuSearch?.isVisible = false
-        view!!.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.material_grey_300))
-        menuDelete?.isEnabled = true
-        menuDelete?.isVisible = true
-        viewModel.professionalLiveData.value = viewModel.professionalsLiveData.value?.get(position)
-        return true
+    private fun refreshList() {
+        view?.swipe_professional?.isRefreshing = true
+        viewModel.professionalsLiveData.value = getProfessionalFromJSON(ListAsyncTask(URL_PROFESSIONAL).execute().get())
+        view?.swipe_professional?.isRefreshing = false
     }
 
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        viewModel.ListAllProfessionalsAsyncTask(view).execute(query)
-        return false
-    }
-
-    override fun onQueryTextChange(newText: String?): Boolean {
-        return false
-    }
-
-    private fun refresh(view: View?) {
-        view?.swipe_schedule?.setOnRefreshListener {
-            viewModel.ListAllProfessionalsAsyncTask(view).execute()
-        }
-    }
-
-    fun resetMenuIcons(){
-        if(searchView!!.isIconified){
+    fun resetMenuIcons() {
+        if (searchView!!.isIconified) {
             viewModel.professionalLiveData.value = null
             menuDelete!!.isVisible = false
             menuSearch!!.isVisible = true
             row!!.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.colorWhite))
-        }else{
+        } else {
             searchView!!.setQuery("", false)
             searchView!!.isIconified = true
         }

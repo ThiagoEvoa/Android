@@ -106,7 +106,7 @@ class ClientListFragment : Fragment() {
     }
 
     private fun initView() {
-        txtMessage = view?.txt_message
+        txtMessage = view?.txt_client_message
 
         view?.swipe_client?.setOnRefreshListener {
             refreshList()
