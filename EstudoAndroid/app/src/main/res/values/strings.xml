@@ -29,9 +29,12 @@
     <!-- Success Messages -->
     <string name="success_create_user">Account created successfully.</string>
     <string name="success_update_user">Account updated successfully.</string>
+    <string name="success_create_schedule">Schedule created successfully.</string>
+    <string name="success_update_schedule">Schedule updated successfully.</string>
     <string name="success_update_email">E-mail updated successfully.</string>
     <string name="success_update_password">Password updated successfully.</string>
     <string name="success_delete_user">Account deleted successfully.</string>
+    <string name="success_delete_schedule">Schedule deleted successfully.</string>
     <string name="success_send_email">Whe send an e-mail to reset the password.</string>
     <string name="success_no_client">We did not find any client.</string>
     <string name="success_no_professional">We did not find any professional.</string>
@@ -45,12 +48,20 @@
     <string name="error_edt_email">Fill the e-email field to continue.</string>
     <string name="error_edt_password">Fill the password field to continue.</string>
     <string name="error_edt_confirm_password">Fill the password field to continue.</string>
+    <string name="error_edt_date">Fill the date field to continue.</string>
+    <string name="error_edt_initial_time">Fill the initial time field to continue.</string>
+    <string name="error_edt_final_time">Fill the final time field to continue.</string>
+    <string name="error_edt_client">Fill the client field to continue.</string>
+    <string name="error_edt_professional">Fill the professional field to continue.</string>
     <string name="error_password_match">Passwords don`t match.</string>
     <string name="error_login">Error while trying to login on application.</string>
     <string name="error_create_user">Error while creating account.</string>
     <string name="error_update_user">Error while updating account.</string>
+    <string name="error_create_schedule">Error while creating schedule.</string>
+    <string name="error_update_schedule">Error while updating schedule.</string>
     <string name="error_update_email">Error while updating e-mail.</string>
     <string name="error_update_password">Error while updating password.</string>
     <string name="error_delete_user">Error while trying deleting account.</string>
+    <string name="error_delete_schedule">Error while trying deleting schedule.</string>
     <string name="error_send_email">Error while sending an e-mail to reset the password.</string>
 </resources>

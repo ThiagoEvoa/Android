@@ -14,7 +14,9 @@ import com.example.thiagoevoa.estudoandroid.model.Professional
 import com.example.thiagoevoa.estudoandroid.model.Schedule
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
+import okhttp3.Response
 import org.json.JSONArray
+import org.json.JSONObject
 
 fun fullScreen(activity: Activity) {
     activity.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -83,4 +85,8 @@ fun getScheduleFromJSON(value: String): MutableList<Schedule> {
         list.add(item)
     }
     return list
+}
+
+fun readErrorMessage(response: Response): MutableList<String> {
+    return JSONObject(response?.body()?.string()).getString("error").split(",") as MutableList<String>
 }

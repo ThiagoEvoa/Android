@@ -8,12 +8,15 @@ import android.support.v4.app.Fragment
 import android.view.*
 import android.widget.ProgressBar
 import com.example.thiagoevoa.estudoandroid.R
+import com.example.thiagoevoa.estudoandroid.asynctask.SaveAsyncTask
+import com.example.thiagoevoa.estudoandroid.asynctask.UpdateAsyncTask
 import com.example.thiagoevoa.estudoandroid.model.Schedule
 import com.example.thiagoevoa.estudoandroid.util.BUNDLE_POSITION
-import com.example.thiagoevoa.estudoandroid.util.getFirebaseUser
+import com.example.thiagoevoa.estudoandroid.util.RESPONSE_OK
+import com.example.thiagoevoa.estudoandroid.util.URL_SCHEDULE
+import com.example.thiagoevoa.estudoandroid.util.showToast
 import com.example.thiagoevoa.estudoandroid.viewmodel.ScheduleViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_schedule_detail.*
 import kotlinx.android.synthetic.main.fragment_schedule_detail.view.*
 
@@ -21,8 +24,6 @@ class ScheduleDetailFragment : Fragment() {
     internal var view: View? = null
     private var schedule: Schedule? = null
     private var progressBar: ProgressBar? = null
-    private var auth: FirebaseAuth? = null
-    private var fireBaseUser: FirebaseUser? = null
 
     private val viewModel: ScheduleViewModel by lazy {
         ViewModelProviders.of(this).get(ScheduleViewModel::class.java)
@@ -39,8 +40,6 @@ class ScheduleDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        auth = FirebaseAuth.getInstance()
-        fireBaseUser = getFirebaseUser(auth!!)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -48,8 +47,7 @@ class ScheduleDetailFragment : Fragment() {
         view = inflater.inflate(R.layout.fragment_schedule_detail, container, false)
 
         schedule = arguments?.get(BUNDLE_POSITION) as Schedule?
-        mountView(schedule)
-
+        initView()
         viewModel.scheduleLiveData.observe(this, Observer {
             view?.edt_date?.setText(it?.date)
             view?.edt_initial_time?.setText(it?.initialTime)
@@ -57,7 +55,6 @@ class ScheduleDetailFragment : Fragment() {
             view?.edt_professional?.setText(it?.professionalId)
             view?.edt_client?.setText(it?.clientId)
         })
-
         return view
     }
 
@@ -70,19 +67,15 @@ class ScheduleDetailFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item!!.itemId) {
             R.id.action_save -> {
-                saveSchedule()
+                save()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun saveSchedule(){
-        viewModel.scheduleLiveData.value = mountSchedule()
-        viewModel.SaveScheduleAsyncTask(this.view).execute()
-    }
-
-    private fun mountView(schedule: Schedule?) {
+    private fun initView() {
+        progressBar = view?.pb_schedule
         view?.edt_date?.setText(schedule?.date)
         view?.edt_initial_time?.setText(schedule?.initialTime)
         view?.edt_final_time?.setText(schedule?.finalTime)
@@ -90,12 +83,40 @@ class ScheduleDetailFragment : Fragment() {
         view?.edt_client?.setText(schedule?.clientId)
     }
 
-    private fun mountSchedule(): Schedule {
-        return Schedule(schedule?._id,
-                edt_date.text.toString(),
-                edt_initial_time.text.toString(),
-                edt_final_time.text.toString(),
-                edt_client.text.toString(),
-                edt_professional.text.toString())
+    private fun save() {
+        when {
+            view?.edt_date?.text.toString().isEmpty() -> {
+                showToast(activity!!.baseContext, resources.getString(R.string.error_edt_date))
+            }
+            view?.edt_initial_time?.text.toString().isEmpty() -> {
+                showToast(activity!!.baseContext, resources.getString(R.string.error_edt_initial_time))
+            }
+            view?.edt_final_time?.text.toString().isEmpty() -> {
+                showToast(activity!!.baseContext, resources.getString(R.string.error_edt_final_time))
+            }
+            view?.edt_client?.text.toString().isEmpty() -> {
+                showToast(activity!!.baseContext, resources.getString(R.string.error_edt_client))
+            }
+            view?.edt_professional?.text.toString().isEmpty() -> {
+                showToast(activity!!.baseContext, resources.getString(R.string.error_edt_professional))
+            }
+            else -> {
+                progressBar?.visibility = View.VISIBLE
+                viewModel.scheduleLiveData.value = Schedule(schedule?._id, edt_date.text.toString(), edt_initial_time.text.toString(), edt_final_time.text.toString(), edt_client.text.toString(), edt_professional.text.toString())
+                if (schedule?._id == null) {
+                    if (SaveAsyncTask(URL_SCHEDULE, Gson().toJson(viewModel.scheduleLiveData.value)).execute().get() == RESPONSE_OK) {
+                        showToast(activity!!.baseContext, resources.getString(R.string.success_create_schedule))
+                    } else {
+                        showToast(activity!!.baseContext, resources.getString(R.string.error_create_schedule))
+                    }
+                } else {
+                    if (UpdateAsyncTask(URL_SCHEDULE, Gson().toJson(viewModel.scheduleLiveData.value)).execute().get() == RESPONSE_OK) {
+                        showToast(activity!!.baseContext, resources.getString(R.string.success_update_schedule))
+                    } else {
+                        showToast(activity!!.baseContext, resources.getString(R.string.error_update_schedule))
+                    }
+                }
+            }
+        }
     }
 }

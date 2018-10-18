@@ -18,7 +18,6 @@ import com.example.thiagoevoa.estudoandroid.util.URL_CLIENT
 import com.example.thiagoevoa.estudoandroid.util.showToast
 import com.example.thiagoevoa.estudoandroid.viewmodel.ClientViewModel
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.fragment_client_detail.*
 import kotlinx.android.synthetic.main.fragment_client_detail.view.*
 
 class ClientDetailFragment : Fragment() {
@@ -49,12 +48,10 @@ class ClientDetailFragment : Fragment() {
 
         client = arguments?.get(BUNDLE_POSITION) as Client?
         initView()
-
         viewModel.clientLiveData.observe(this, Observer {
             view?.edt_client_cpf?.setText(it?.cpf)
             view?.edt_client_name?.setText(it?.name)
         })
-
         return view
     }
 
@@ -82,15 +79,15 @@ class ClientDetailFragment : Fragment() {
 
     private fun save() {
         when {
-            edt_client_cpf.text.toString().isEmpty() -> {
+            view?.edt_client_cpf?.text.toString().isEmpty() -> {
                 showToast(activity!!.baseContext, resources.getString(R.string.error_edt_cpf))
             }
-            edt_client_name.text.toString().isEmpty() -> {
+            view?.edt_client_name?.text.toString().isEmpty() -> {
                 showToast(activity!!.baseContext, resources.getString(R.string.error_edt_name))
             }
             else -> {
                 progressBar?.visibility = View.VISIBLE
-                viewModel.clientLiveData.value = Client(client?._id, edt_client_cpf.text.toString(), edt_client_name.text.toString())
+                viewModel.clientLiveData.value = Client(client?._id, view?.edt_client_cpf?.text.toString(), view?.edt_client_name?.text.toString())
                 if (client?._id == null) {
                     if (SaveAsyncTask(URL_CLIENT, Gson().toJson(viewModel.clientLiveData.value)).execute().get() == RESPONSE_OK) {
                         showToast(activity!!.baseContext, resources.getString(R.string.success_create_user))

@@ -48,12 +48,10 @@ class ProfessionalDetailFragment : Fragment() {
 
         professional = arguments?.get(BUNDLE_POSITION) as Professional?
         initView()
-
         viewModel.professionalLiveData.observe(this, Observer {
             view?.edt_professional_cpfcnpj?.setText(it?.cpf_cnpj)
             view?.edt_professional_name?.setText(it?.name)
         })
-
         return view
     }
 
