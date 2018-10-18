@@ -12,10 +12,11 @@ import com.example.thiagoevoa.estudoandroid.asynctask.ListAsyncTask
 import com.example.thiagoevoa.estudoandroid.asynctask.SaveAsyncTask
 import com.example.thiagoevoa.estudoandroid.asynctask.UpdateAsyncTask
 import com.example.thiagoevoa.estudoandroid.model.Client
-import com.example.thiagoevoa.estudoandroid.util.*
+import com.example.thiagoevoa.estudoandroid.util.BUNDLE_POSITION
+import com.example.thiagoevoa.estudoandroid.util.RESPONSE_OK
+import com.example.thiagoevoa.estudoandroid.util.URL_CLIENT
+import com.example.thiagoevoa.estudoandroid.util.showToast
 import com.example.thiagoevoa.estudoandroid.viewmodel.ClientViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_client_detail.*
 import kotlinx.android.synthetic.main.fragment_client_detail.view.*
@@ -24,8 +25,6 @@ class ClientDetailFragment : Fragment() {
     internal var view: View? = null
     private var client: Client? = null
     private var progressBar: ProgressBar? = null
-    private var auth: FirebaseAuth? = null
-    private var fireBaseUser: FirebaseUser? = null
 
     private val viewModel: ClientViewModel by lazy {
         ViewModelProviders.of(this).get(ClientViewModel::class.java)
@@ -42,8 +41,6 @@ class ClientDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        auth = FirebaseAuth.getInstance()
-        fireBaseUser = getFirebaseUser(auth!!)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -94,27 +91,24 @@ class ClientDetailFragment : Fragment() {
             else -> {
                 progressBar?.visibility = View.VISIBLE
                 viewModel.clientLiveData.value = Client(client?._id, edt_client_cpf.text.toString(), edt_client_name.text.toString())
-                when {
-                    client?._id == null -> {
-                        if (SaveAsyncTask(URL_CLIENT, Gson().toJson(viewModel.clientLiveData.value)).execute().get() == RESPONSE_OK) {
-                            showToast(activity!!.baseContext, resources.getString(R.string.success_create_user))
-                        } else {
-                            showToast(activity!!.baseContext, resources.getString(R.string.error_create_user))
-                        }
-                        progressBar?.visibility = View.GONE
+                if (client?._id == null) {
+                    if (SaveAsyncTask(URL_CLIENT, Gson().toJson(viewModel.clientLiveData.value)).execute().get() == RESPONSE_OK) {
+                        showToast(activity!!.baseContext, resources.getString(R.string.success_create_user))
+                    } else {
+                        showToast(activity!!.baseContext, resources.getString(R.string.error_create_user))
                     }
-                    else -> {
-                        if (UpdateAsyncTask(URL_CLIENT, Gson().toJson(viewModel.clientLiveData.value)).execute().get() == RESPONSE_OK) {
-                            ListAsyncTask(URL_CLIENT).execute()
-                            showToast(activity!!.baseContext, resources.getString(R.string.success_create_user))
-                        } else {
-                            showToast(activity!!.baseContext, resources.getString(R.string.error_create_user))
-                        }
-                        progressBar?.visibility = View.GONE
+                } else {
+                    if (UpdateAsyncTask(URL_CLIENT, Gson().toJson(viewModel.clientLiveData.value)).execute().get() == RESPONSE_OK) {
+                        ListAsyncTask(URL_CLIENT).execute()
+                        showToast(activity!!.baseContext, resources.getString(R.string.success_create_user))
+                    } else {
+                        showToast(activity!!.baseContext, resources.getString(R.string.error_create_user))
                     }
                 }
+                progressBar?.visibility = View.GONE
             }
         }
     }
 }
+
 

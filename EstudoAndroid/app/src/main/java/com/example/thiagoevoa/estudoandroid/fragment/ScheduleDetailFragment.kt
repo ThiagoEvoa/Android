@@ -6,16 +6,23 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
+import android.widget.ProgressBar
 import com.example.thiagoevoa.estudoandroid.R
 import com.example.thiagoevoa.estudoandroid.model.Schedule
 import com.example.thiagoevoa.estudoandroid.util.BUNDLE_POSITION
+import com.example.thiagoevoa.estudoandroid.util.getFirebaseUser
 import com.example.thiagoevoa.estudoandroid.viewmodel.ScheduleViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.fragment_schedule_detail.*
 import kotlinx.android.synthetic.main.fragment_schedule_detail.view.*
 
 class ScheduleDetailFragment : Fragment() {
     internal var view: View? = null
     private var schedule: Schedule? = null
+    private var progressBar: ProgressBar? = null
+    private var auth: FirebaseAuth? = null
+    private var fireBaseUser: FirebaseUser? = null
 
     private val viewModel: ScheduleViewModel by lazy {
         ViewModelProviders.of(this).get(ScheduleViewModel::class.java)
@@ -32,6 +39,8 @@ class ScheduleDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        auth = FirebaseAuth.getInstance()
+        fireBaseUser = getFirebaseUser(auth!!)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

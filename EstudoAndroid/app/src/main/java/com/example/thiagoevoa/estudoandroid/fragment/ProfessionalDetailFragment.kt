@@ -6,16 +6,24 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
+import android.widget.ProgressBar
 import com.example.thiagoevoa.estudoandroid.R
+import com.example.thiagoevoa.estudoandroid.asynctask.SaveAsyncTask
+import com.example.thiagoevoa.estudoandroid.asynctask.UpdateAsyncTask
 import com.example.thiagoevoa.estudoandroid.model.Professional
 import com.example.thiagoevoa.estudoandroid.util.BUNDLE_POSITION
+import com.example.thiagoevoa.estudoandroid.util.RESPONSE_OK
+import com.example.thiagoevoa.estudoandroid.util.URL_PROFESSIONAL
+import com.example.thiagoevoa.estudoandroid.util.showToast
 import com.example.thiagoevoa.estudoandroid.viewmodel.ProfessionalViewModel
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_professional_detail.*
 import kotlinx.android.synthetic.main.fragment_professional_detail.view.*
 
 class ProfessionalDetailFragment : Fragment() {
     internal var view: View? = null
     private var professional: Professional? = null
+    private var progressBar: ProgressBar? = null
 
     private val viewModel: ProfessionalViewModel by lazy {
         ViewModelProviders.of(this).get(ProfessionalViewModel::class.java)
@@ -39,7 +47,7 @@ class ProfessionalDetailFragment : Fragment() {
         view = inflater.inflate(R.layout.fragment_professional_detail, container, false)
 
         professional = arguments?.get(BUNDLE_POSITION) as Professional?
-        mountView(professional)
+        initView()
 
         viewModel.professionalLiveData.observe(this, Observer {
             view?.edt_professional_cpfcnpj?.setText(it?.cpf_cnpj)
@@ -58,26 +66,45 @@ class ProfessionalDetailFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item!!.itemId) {
             R.id.action_save -> {
-                saveProfessional()
+                save()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun saveProfessional(){
-        viewModel.professionalLiveData.value = mountProfessional()
-        viewModel.SaveProfessionalAsyncTask(this.view).execute()
-    }
-
-    private fun mountView(professional: Professional?){
-        view?.edt_professional_cpfcnpj?.setText(professional?.cpf_cnpj)
+    private fun initView() {
+        progressBar = view!!.pb_professional
         view?.edt_professional_name?.setText(professional?.name)
+        view?.edt_professional_cpfcnpj?.setText(professional?.cpf_cnpj)
     }
 
-    private fun mountProfessional(): Professional{
-        return Professional(professional?._id,
-                edt_professional_cpfcnpj.text.toString(),
-                edt_professional_name.text.toString())
+    private fun save() {
+        when {
+            view?.edt_professional_cpfcnpj?.text.toString().isEmpty() -> {
+                showToast(activity!!.baseContext, resources.getString(R.string.error_edt_cpf_cnpj))
+            }
+            view?.edt_professional_name?.text.toString().isEmpty() -> {
+                showToast(activity!!.baseContext, resources.getString(R.string.error_edt_name))
+            }
+            else -> {
+                progressBar?.visibility = View.VISIBLE
+                viewModel.professionalLiveData.value = Professional(professional?._id, edt_professional_cpfcnpj.text.toString(), edt_professional_name.text.toString())
+                if (professional?._id == null) {
+                    if (SaveAsyncTask(URL_PROFESSIONAL, Gson().toJson(viewModel.professionalLiveData.value)).execute().get() == RESPONSE_OK) {
+                        showToast(activity!!.baseContext, resources.getString(R.string.success_create_user))
+                    } else {
+                        showToast(activity!!.baseContext, resources.getString(R.string.error_delete_user))
+                    }
+                } else {
+                    if (UpdateAsyncTask(URL_PROFESSIONAL, Gson().toJson(viewModel.professionalLiveData.value)).execute().get() == RESPONSE_OK) {
+                        showToast(activity!!.baseContext, resources.getString(R.string.success_update_user))
+                    } else {
+                        showToast(activity!!.baseContext, resources.getString(R.string.error_update_user))
+                    }
+                }
+                progressBar?.visibility = View.GONE
+            }
+        }
     }
 }

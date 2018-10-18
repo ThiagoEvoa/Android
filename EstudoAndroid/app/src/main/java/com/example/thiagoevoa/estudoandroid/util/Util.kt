@@ -2,11 +2,13 @@ package com.example.thiagoevoa.estudoandroid.util
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
+import com.example.thiagoevoa.estudoandroid.activity.LoginActivity
 import com.example.thiagoevoa.estudoandroid.model.Client
 import com.example.thiagoevoa.estudoandroid.model.Professional
 import com.example.thiagoevoa.estudoandroid.model.Schedule
@@ -24,8 +26,9 @@ fun logout(activity: Activity, auth: FirebaseAuth) {
     AlertDialog.Builder(activity).setTitle("Warning!").setMessage("Would you like to close application?")
             .setPositiveButton("yes") { dialog, which ->
                 auth.signOut()
-                deleteSharedPreference(activity.baseContext)
+                deleteSharedPreference(activity)
                 activity.finishAffinity()
+                activity.startActivity(Intent(activity, LoginActivity::class.java))
             }
             .setNegativeButton("no") { dialog, which -> }
             .create().show()
