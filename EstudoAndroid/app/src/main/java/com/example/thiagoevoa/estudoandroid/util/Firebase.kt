@@ -22,14 +22,17 @@ fun login(context: Context, auth: FirebaseAuth, email: String, password: String)
     }
 }
 
-fun createAccount(context: Context, auth: FirebaseAuth, email: String, password: String) {
+fun createAccount(context: Context, auth: FirebaseAuth, email: String, password: String) : Boolean{
+    var result = false
     auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
         if (task.isSuccessful) {
             showToast(context, context.resources.getString(R.string.success_create_user))
         } else {
             showToast(context, context.resources.getString(R.string.error_create_user))
         }
+        result = task.isSuccessful
     }
+    return result
 }
 
 fun updateEmail(context: Context, user: FirebaseUser, email: String) {
@@ -70,9 +73,5 @@ fun resetPassword(context: Context, auth: FirebaseAuth, password: String) {
             showToast(context, context.resources.getString(R.string.error_send_email))
         }
     }
-}
-
-fun logout(auth: FirebaseAuth) {
-    auth.signOut()
 }
 

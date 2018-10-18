@@ -12,15 +12,15 @@ import com.example.thiagoevoa.estudoandroid.R.layout.item_client
 import com.example.thiagoevoa.estudoandroid.model.Client
 import kotlinx.android.synthetic.main.item_client.view.*
 
-class ClientAdapter(context: Context, objects: MutableList<Client>?) : ArrayAdapter<Client>(context, 0, objects) {
+class ClientAdapter(context: Context, objects: MutableList<Client>) : ArrayAdapter<Client>(context, 0, objects) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        var client: Client = getItem(position)
-        var viewHolder: ViewHolder
-        var convertView = convertView
+        val client: Client = getItem(position)!!
+        val viewHolder: ViewHolder
+        var view = convertView
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(item_client, parent, false)
-            viewHolder = ViewHolder(convertView)
+            view = LayoutInflater.from(context).inflate(item_client, parent, false)
+            viewHolder = ViewHolder(view)
         } else {
             viewHolder = convertView.tag as ViewHolder
         }
@@ -29,7 +29,7 @@ class ClientAdapter(context: Context, objects: MutableList<Client>?) : ArrayAdap
         viewHolder.clientName.text = client.name
         viewHolder.clientImage.setImageResource(R.drawable.ic_person_black)
 
-        return convertView
+        return view
     }
 
     class ViewHolder(parent: View) {

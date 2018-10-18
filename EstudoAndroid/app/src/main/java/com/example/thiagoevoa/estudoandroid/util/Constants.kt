@@ -3,10 +3,10 @@ package com.example.thiagoevoa.estudoandroid.util
 import okhttp3.MediaType
 
 //URL`s
-const val HOST = "https://webservice-study-nodejs.herokuapp.com/api/"
-const val URL_SCHEDULE = "schedule"
-const val URL_CLIENT = "client"
-const val URL_PROFESSIONAL = "professional"
+const val HOST = "https://study-node-mongodb.herokuapp.com/api/"
+const val URL_SCHEDULE = "${HOST}schedule"
+const val URL_CLIENT = "${HOST}client"
+const val URL_PROFESSIONAL = "${HOST}professional"
 
 //Fragment Tag
 const val SCHEDULE_DETAIL_FRAGMENT = "scheduleDetailFragment"
@@ -27,3 +27,7 @@ val CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8")
 //SharedPreferences
 const val SHARED_PREFERENCES = "sharedPreference"
 const val TOKEN = "token"
+
+//Response Code
+
+const val RESPONSE_OK = 200

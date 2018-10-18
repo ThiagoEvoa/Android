@@ -12,7 +12,6 @@ import com.example.thiagoevoa.estudoandroid.fragment.ClientDetailFragment
 import com.example.thiagoevoa.estudoandroid.model.Client
 import com.example.thiagoevoa.estudoandroid.util.CLIENT_DETAIL_FRAGMENT
 import com.example.thiagoevoa.estudoandroid.util.EXTRA_CLIENT
-import com.example.thiagoevoa.estudoandroid.util.deleteSharedPreference
 import com.example.thiagoevoa.estudoandroid.util.logout
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_client_detail.*
@@ -75,9 +74,7 @@ class ClientDetailActivity : AppCompatActivity(), NavigationView.OnNavigationIte
 
             }
             R.id.nav_logout -> {
-                logout(auth!!)
-                deleteSharedPreference(this)
-                finish()
+                logout(this, auth!!)
             }
         }
 

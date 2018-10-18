@@ -16,9 +16,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
         auth = FirebaseAuth.getInstance()
-
         initViews()
     }
 
@@ -63,6 +61,7 @@ class LoginActivity : AppCompatActivity() {
                 }
                 else -> {
                     createAccount(this, auth!!, edt_email.text.toString(), edt_password.text.toString())
+                    showToast(this, resources.getString(R.string.success_create_user))
                 }
             }
         }

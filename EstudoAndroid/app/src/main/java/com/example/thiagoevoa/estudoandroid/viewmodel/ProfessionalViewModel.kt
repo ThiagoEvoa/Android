@@ -14,7 +14,6 @@ import android.widget.Toast
 import com.example.thiagoevoa.estudoandroid.R
 import com.example.thiagoevoa.estudoandroid.model.Professional
 import com.example.thiagoevoa.estudoandroid.util.CONTENT_TYPE
-import com.example.thiagoevoa.estudoandroid.util.HOST
 import com.example.thiagoevoa.estudoandroid.util.URL_PROFESSIONAL
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
@@ -49,10 +48,10 @@ class ProfessionalViewModel : ViewModel() {
             try {
                 response = if (params.isEmpty()) {
                     OkHttpClient().newCall(
-                            Request.Builder().url("$HOST$URL_PROFESSIONAL").build()).execute()
+                            Request.Builder().url(URL_PROFESSIONAL).build()).execute()
                 } else {
                     OkHttpClient().newCall(
-                            Request.Builder().url("$HOST$URL_PROFESSIONAL/cpfcnpj/${params[0]}").build()).execute()
+                            Request.Builder().url("$URL_PROFESSIONAL/cpfcnpj/${params[0]}").build()).execute()
                 }
 
                 val jsonString = response?.body()?.string()
@@ -94,14 +93,14 @@ class ProfessionalViewModel : ViewModel() {
                 response = if (professionalLiveData?.value?._id != null) {
                     OkHttpClient().newCall(
                             Request.Builder()
-                                    .url(HOST + URL_PROFESSIONAL)
+                                    .url(URL_PROFESSIONAL)
                                     .put(RequestBody.create(CONTENT_TYPE, Gson().toJson(professionalLiveData.value)))
                                     .build())
                             .execute()
                 } else {
                     OkHttpClient().newCall(
                             Request.Builder()
-                                    .url(HOST + URL_PROFESSIONAL)
+                                    .url(URL_PROFESSIONAL)
                                     .post(RequestBody.create(CONTENT_TYPE, Gson().toJson(professionalLiveData.value)))
                                     .build())
                             .execute()
@@ -144,7 +143,7 @@ class ProfessionalViewModel : ViewModel() {
             try {
                 response = OkHttpClient().newCall(
                         Request.Builder()
-                                .url(HOST + URL_PROFESSIONAL)
+                                .url(URL_PROFESSIONAL)
                                 .delete(RequestBody.create(CONTENT_TYPE, Gson().toJson(professionalLiveData.value)))
                                 .build())
                         .execute()

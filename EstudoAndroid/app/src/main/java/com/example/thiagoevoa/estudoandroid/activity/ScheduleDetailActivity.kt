@@ -12,7 +12,6 @@ import com.example.thiagoevoa.estudoandroid.fragment.ScheduleDetailFragment
 import com.example.thiagoevoa.estudoandroid.model.Schedule
 import com.example.thiagoevoa.estudoandroid.util.EXTRA_SCHEDULE
 import com.example.thiagoevoa.estudoandroid.util.SCHEDULE_DETAIL_FRAGMENT
-import com.example.thiagoevoa.estudoandroid.util.deleteSharedPreference
 import com.example.thiagoevoa.estudoandroid.util.logout
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_schedule_detail.*
@@ -75,9 +74,7 @@ class ScheduleDetailActivity : AppCompatActivity(), NavigationView.OnNavigationI
 
             }
             R.id.nav_logout -> {
-                logout(auth!!)
-                deleteSharedPreference(this)
-                finish()
+                logout(this, auth!!)
             }
         }
 

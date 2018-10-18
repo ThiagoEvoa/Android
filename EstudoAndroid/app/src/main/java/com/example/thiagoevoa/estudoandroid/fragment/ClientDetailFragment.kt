@@ -6,23 +6,32 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
-
+import android.widget.ProgressBar
 import com.example.thiagoevoa.estudoandroid.R
+import com.example.thiagoevoa.estudoandroid.asynctask.ListAsyncTask
+import com.example.thiagoevoa.estudoandroid.asynctask.SaveAsyncTask
+import com.example.thiagoevoa.estudoandroid.asynctask.UpdateAsyncTask
 import com.example.thiagoevoa.estudoandroid.model.Client
-import com.example.thiagoevoa.estudoandroid.util.BUNDLE_POSITION
+import com.example.thiagoevoa.estudoandroid.util.*
 import com.example.thiagoevoa.estudoandroid.viewmodel.ClientViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_client_detail.*
 import kotlinx.android.synthetic.main.fragment_client_detail.view.*
 
 class ClientDetailFragment : Fragment() {
     internal var view: View? = null
     private var client: Client? = null
+    private var progressBar: ProgressBar? = null
+    private var auth: FirebaseAuth? = null
+    private var fireBaseUser: FirebaseUser? = null
 
-    private val viewModel: ClientViewModel by lazy{
+    private val viewModel: ClientViewModel by lazy {
         ViewModelProviders.of(this).get(ClientViewModel::class.java)
     }
 
-    fun newInstance(client: Client?): ClientDetailFragment{
+    fun newInstance(client: Client?): ClientDetailFragment {
         val fragment = ClientDetailFragment()
         val args = Bundle()
         args.putParcelable(BUNDLE_POSITION, client)
@@ -33,6 +42,8 @@ class ClientDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        auth = FirebaseAuth.getInstance()
+        fireBaseUser = getFirebaseUser(auth!!)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +51,7 @@ class ClientDetailFragment : Fragment() {
         view = inflater.inflate(R.layout.fragment_client_detail, container, false)
 
         client = arguments?.get(BUNDLE_POSITION) as Client?
-        mountView(client)
+        initView()
 
         viewModel.clientLiveData.observe(this, Observer {
             view?.edt_client_cpf?.setText(it?.cpf)
@@ -59,26 +70,51 @@ class ClientDetailFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item!!.itemId) {
             R.id.action_save -> {
-                saveClient()
+                save()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun saveClient(){
-        viewModel.clientLiveData.value = mountClient()
-        viewModel.SaveClientAsyncTask(this.view).execute()
-    }
-
-    private fun mountView(client: Client?){
+    private fun initView() {
+        progressBar = view?.pb_client
         view?.edt_client_cpf?.setText(client?.cpf)
         view?.edt_client_name?.setText(client?.name)
     }
 
-    private fun mountClient(): Client{
-        return Client(client?._id,
-                edt_client_cpf.text.toString(),
-                edt_client_name.text.toString())
+    private fun save() {
+        when {
+            edt_client_cpf.text.toString().isEmpty() -> {
+                showToast(activity!!.baseContext, resources.getString(R.string.error_edt_cpf))
+            }
+            edt_client_name.text.toString().isEmpty() -> {
+                showToast(activity!!.baseContext, resources.getString(R.string.error_edt_name))
+            }
+            else -> {
+                progressBar?.visibility = View.VISIBLE
+                viewModel.clientLiveData.value = Client(client?._id, edt_client_cpf.text.toString(), edt_client_name.text.toString())
+                when {
+                    client?._id == null -> {
+                        if (SaveAsyncTask(URL_CLIENT, Gson().toJson(viewModel.clientLiveData.value)).execute().get() == RESPONSE_OK) {
+                            showToast(activity!!.baseContext, resources.getString(R.string.success_create_user))
+                        } else {
+                            showToast(activity!!.baseContext, resources.getString(R.string.error_create_user))
+                        }
+                        progressBar?.visibility = View.GONE
+                    }
+                    else -> {
+                        if (UpdateAsyncTask(URL_CLIENT, Gson().toJson(viewModel.clientLiveData.value)).execute().get() == RESPONSE_OK) {
+                            ListAsyncTask(URL_CLIENT).execute()
+                            showToast(activity!!.baseContext, resources.getString(R.string.success_create_user))
+                        } else {
+                            showToast(activity!!.baseContext, resources.getString(R.string.error_create_user))
+                        }
+                        progressBar?.visibility = View.GONE
+                    }
+                }
+            }
+        }
     }
 }
+

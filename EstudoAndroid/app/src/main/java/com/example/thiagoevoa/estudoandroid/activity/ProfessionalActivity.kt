@@ -11,7 +11,6 @@ import android.view.Menu
 import android.view.MenuItem
 import com.example.thiagoevoa.estudoandroid.R
 import com.example.thiagoevoa.estudoandroid.fragment.ProfessionalListFragment
-import com.example.thiagoevoa.estudoandroid.util.deleteSharedPreference
 import com.example.thiagoevoa.estudoandroid.util.logout
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_professional.*
@@ -88,9 +87,7 @@ class ProfessionalActivity : AppCompatActivity(), NavigationView.OnNavigationIte
 
             }
             R.id.nav_logout -> {
-                logout(auth!!)
-                deleteSharedPreference(this)
-                finish()
+                logout(this, auth!!)
             }
         }
 

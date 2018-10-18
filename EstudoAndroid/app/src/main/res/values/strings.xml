@@ -8,6 +8,11 @@
     <string name="action_settings">Settings</string>
     <string name="hint_email">e-mail</string>
     <string name="hint_password">password</string>
+    <string name="hint_confirm_password">confirm password</string>
+    <string name="hint_cpf">CPF</string>
+    <string name="hint_cnpj">CNPJ</string>
+    <string name="hint_cpf_cnpj">CPF/CNPJ</string>
+    <string name="hint_name">name</string>
     <string name="btn_login">login</string>
     <string name="txt_forget_password">Forgot your password?</string>
     <string name="txt_create_user">Create new account</string>
@@ -23,16 +28,27 @@
 
     <!-- Success Messages -->
     <string name="success_create_user">Account created successfully.</string>
+    <string name="success_update_user">Account updated successfully.</string>
     <string name="success_update_email">E-mail updated successfully.</string>
     <string name="success_update_password">Password updated successfully.</string>
     <string name="success_delete_user">Account deleted successfully.</string>
     <string name="success_send_email">Whe send an e-mail to reset the password.</string>
+    <string name="success_no_client">We did not find any client.</string>
+    <string name="success_no_professional">We did not find any professional.</string>
+    <string name="success_no_schedule">We did not find any schedule.</string>
 
     <!-- Error Messages -->
+    <string name="error_edt_name">Fill the name field to continue.</string>
+    <string name="error_edt_cpf_cnpj">Fill the CPF/CNPJ field to continue.</string>
+    <string name="error_edt_cpf">Fill the CPF field to continue.</string>
+    <string name="error_edt_cnpj">Fill the CNPJ field to continue.</string>
     <string name="error_edt_email">Fill the e-email field to continue.</string>
     <string name="error_edt_password">Fill the password field to continue.</string>
+    <string name="error_edt_confirm_password">Fill the password field to continue.</string>
+    <string name="error_password_match">Passwords don`t match.</string>
     <string name="error_login">Error while trying to login on application.</string>
     <string name="error_create_user">Error while creating account.</string>
+    <string name="error_update_user">Error while updating account.</string>
     <string name="error_update_email">Error while updating e-mail.</string>
     <string name="error_update_password">Error while updating password.</string>
     <string name="error_delete_user">Error while trying deleting account.</string>

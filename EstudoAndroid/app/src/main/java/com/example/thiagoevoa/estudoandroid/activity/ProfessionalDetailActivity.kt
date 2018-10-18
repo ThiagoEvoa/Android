@@ -13,7 +13,6 @@ import com.example.thiagoevoa.estudoandroid.fragment.ProfessionalDetailFragment
 import com.example.thiagoevoa.estudoandroid.model.Professional
 import com.example.thiagoevoa.estudoandroid.util.EXTRA_PROFESSIONAL
 import com.example.thiagoevoa.estudoandroid.util.PROFESSIONAL_DETAIL_FRAGMENT
-import com.example.thiagoevoa.estudoandroid.util.deleteSharedPreference
 import com.example.thiagoevoa.estudoandroid.util.logout
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_professional_detail.*
@@ -81,9 +80,7 @@ class ProfessionalDetailActivity : AppCompatActivity(), NavigationView.OnNavigat
 
             }
             R.id.nav_logout -> {
-                logout(auth!!)
-                deleteSharedPreference(this)
-                finish()
+                logout(this, auth!!)
             }
         }
 
