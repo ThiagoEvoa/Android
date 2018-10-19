@@ -57,7 +57,7 @@ class ProfessionalListFragment : Fragment() {
                 } else {
                     txtMessage?.visibility = View.GONE
                 }
-                view?.listView_professional_fragment!!.adapter = ProfessionalAdapter(activity!!.baseContext, it)
+                view?.listView_professional_fragment!!.adapter = ProfessionalAdapter(activity!!.baseContext, it!!)
             })
         }
     }
@@ -136,7 +136,7 @@ class ProfessionalListFragment : Fragment() {
                 view
             }
             menuSearch?.isVisible = false
-            view!!.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.material_grey_300))
+            view!!.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.light_grey))
             menuDelete?.isEnabled = true
             menuDelete?.isVisible = true
             viewModel.professionalLiveData.value = viewModel.professionalsLiveData.value?.get(position)

@@ -10,26 +10,24 @@ import com.example.thiagoevoa.estudoandroid.R.layout.item_schedule
 import com.example.thiagoevoa.estudoandroid.model.Schedule
 import kotlinx.android.synthetic.main.item_schedule.view.*
 
-class ScheduleAdapter(context: Context, objects: MutableList<Schedule>?) : ArrayAdapter<Schedule>(context, 0, objects) {
+class ScheduleAdapter(context: Context, objects: MutableList<Schedule>) : ArrayAdapter<Schedule>(context, 0, objects) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        var schedule: Schedule = getItem(position)
-        var viewHolder: ViewHolder
-        var convertView = convertView
+        val schedule: Schedule = getItem(position)!!
+        val viewHolder: ViewHolder
+        var view = convertView
 
-        if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(item_schedule, parent, false)
-            viewHolder = ViewHolder(convertView)
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(item_schedule, parent, false)
+            viewHolder = ViewHolder(view)
         } else {
-            viewHolder = convertView.tag as ViewHolder
+            viewHolder = view.tag as ViewHolder
         }
-
         viewHolder.date.text = schedule.date
         viewHolder.initialTime.text = schedule.initialTime
         viewHolder.finalTime.text = schedule.finalTime
         viewHolder.professional.text = schedule.professionalId
         viewHolder.client.text = schedule.clientId
-
-        return convertView
+        return view
     }
 
     class ViewHolder(parent: View) {
@@ -38,7 +36,6 @@ class ScheduleAdapter(context: Context, objects: MutableList<Schedule>?) : Array
         var finalTime: TextView = parent.txt_final_time
         var professional: TextView = parent.txt_professional
         var client: TextView = parent.txt_client
-
         init {
             parent.tag = this
         }

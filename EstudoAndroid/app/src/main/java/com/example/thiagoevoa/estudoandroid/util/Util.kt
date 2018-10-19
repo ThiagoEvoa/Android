@@ -88,5 +88,5 @@ fun getScheduleFromJSON(value: String): MutableList<Schedule> {
 }
 
 fun readErrorMessage(response: Response): MutableList<String> {
-    return JSONObject(response?.body()?.string()).getString("error").split(",") as MutableList<String>
+    return JSONObject(response.body()?.string()).getString("error").split(",") as MutableList<String>
 }

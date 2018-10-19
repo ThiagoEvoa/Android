@@ -3,12 +3,11 @@ package com.example.thiagoevoa.estudoandroid.model
 import android.os.Parcel
 import android.os.Parcelable
 
-data class Professional(var _id: String?, var cpf_cnpj: String, var name: String) : Parcelable {
+data class Professional(var _id: String?, var cpf_cnpj: String?, var name: String?) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readString(),
-            parcel.readString()) {
-    }
+            parcel.readString())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(_id)

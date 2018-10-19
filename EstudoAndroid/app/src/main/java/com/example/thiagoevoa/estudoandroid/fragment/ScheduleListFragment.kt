@@ -58,7 +58,7 @@ class ScheduleListFragment : Fragment() {
                 } else {
                     txtMessage?.visibility = View.GONE
                 }
-                view?.listView_schedule_fragment!!.adapter = ScheduleAdapter(activity!!.baseContext, it)
+                view?.listView_schedule_fragment!!.adapter = ScheduleAdapter(activity!!.baseContext, it!!)
             })
         }
     }
@@ -136,7 +136,7 @@ class ScheduleListFragment : Fragment() {
             }
 
             menuSearch?.isVisible = false
-            view!!.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.material_grey_300))
+            view!!.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.light_grey))
             menuDelete?.isEnabled = true
             menuDelete?.isVisible = true
             viewModel.scheduleLiveData.value = viewModel.schedulesLiveData.value?.get(position)

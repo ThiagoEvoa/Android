@@ -62,7 +62,7 @@ class ProfessionalActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         menuInflater.inflate(R.menu.menu, menu)
         menuDelete = menu.findItem(R.id.action_delete)
 
-        val menuItem = menu?.findItem(R.id.action_search)
+        val menuItem = menu.findItem(R.id.action_search)
         searchView = menuItem?.actionView as SearchView
         return true
     }

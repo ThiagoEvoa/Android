@@ -24,11 +24,9 @@ class ClientAdapter(context: Context, objects: MutableList<Client>) : ArrayAdapt
         } else {
             viewHolder = convertView.tag as ViewHolder
         }
-
         viewHolder.clientCpf.text = client.cpf
         viewHolder.clientName.text = client.name
         viewHolder.clientImage.setImageResource(R.drawable.ic_person_black)
-
         return view
     }
 
@@ -36,7 +34,6 @@ class ClientAdapter(context: Context, objects: MutableList<Client>) : ArrayAdapt
         var clientImage: ImageView = parent.img_client
         var clientCpf: TextView = parent.txt_client_cpf
         var clientName: TextView = parent.txt_client_name
-
         init {
             parent.tag = this
         }
