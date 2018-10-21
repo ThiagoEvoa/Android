@@ -24,7 +24,6 @@ class ScheduleDetailFragment : Fragment() {
     internal var view: View? = null
     private var schedule: Schedule? = null
     private var progressBar: ProgressBar? = null
-
     private val viewModel: ScheduleViewModel by lazy {
         ViewModelProviders.of(this).get(ScheduleViewModel::class.java)
     }
@@ -45,7 +44,6 @@ class ScheduleDetailFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         view = inflater.inflate(R.layout.fragment_schedule_detail, container, false)
-
         schedule = arguments?.get(BUNDLE_POSITION) as Schedule?
         initView()
         viewModel.scheduleLiveData.observe(this, Observer {
@@ -116,6 +114,7 @@ class ScheduleDetailFragment : Fragment() {
                         showToast(activity!!.baseContext, resources.getString(R.string.error_update_schedule))
                     }
                 }
+                progressBar?.visibility = View.GONE
             }
         }
     }

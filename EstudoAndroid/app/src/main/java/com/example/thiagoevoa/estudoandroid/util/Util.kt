@@ -57,32 +57,38 @@ fun isUserLogged(context: Context): Boolean {
     return sharedPreferences.getString(TOKEN, null) != null
 }
 
-fun getClientFromJSON(value: String): MutableList<Client> {
+fun getClientFromJSON(value: String?): MutableList<Client> {
     val list: MutableList<Client> = mutableListOf()
-    val jsonArray = JSONArray(value)
-    for (i in 0 until jsonArray.length()) {
-        val item = Gson().fromJson(jsonArray[i].toString(), Client::class.java)
-        list.add(item)
+    if (value != null) {
+        val jsonArray = JSONArray(value)
+        for (i in 0 until jsonArray.length()) {
+            val item = Gson().fromJson(jsonArray[i].toString(), Client::class.java)
+            list.add(item)
+        }
     }
     return list
 }
 
-fun getProfessionalFromJSON(value: String): MutableList<Professional> {
+fun getProfessionalFromJSON(value: String?): MutableList<Professional> {
     val list: MutableList<Professional> = mutableListOf()
-    val jsonArray = JSONArray(value)
-    for (i in 0 until jsonArray.length()) {
-        val item = Gson().fromJson(jsonArray[i].toString(), Professional::class.java)
-        list.add(item)
+    if (value != null) {
+        val jsonArray = JSONArray(value)
+        for (i in 0 until jsonArray.length()) {
+            val item = Gson().fromJson(jsonArray[i].toString(), Professional::class.java)
+            list.add(item)
+        }
     }
     return list
 }
 
-fun getScheduleFromJSON(value: String): MutableList<Schedule> {
+fun getScheduleFromJSON(value: String?): MutableList<Schedule> {
     val list: MutableList<Schedule> = mutableListOf()
-    val jsonArray = JSONArray(value)
-    for (i in 0 until jsonArray.length()) {
-        val item = Gson().fromJson(jsonArray[i].toString(), Schedule::class.java)
-        list.add(item)
+    if (value != null) {
+        val jsonArray = JSONArray(value)
+        for (i in 0 until jsonArray.length()) {
+            val item = Gson().fromJson(jsonArray[i].toString(), Schedule::class.java)
+            list.add(item)
+        }
     }
     return list
 }

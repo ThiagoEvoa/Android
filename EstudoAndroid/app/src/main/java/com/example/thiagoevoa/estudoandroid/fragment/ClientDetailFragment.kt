@@ -24,7 +24,6 @@ class ClientDetailFragment : Fragment() {
     internal var view: View? = null
     private var client: Client? = null
     private var progressBar: ProgressBar? = null
-
     private val viewModel: ClientViewModel by lazy {
         ViewModelProviders.of(this).get(ClientViewModel::class.java)
     }
@@ -45,7 +44,6 @@ class ClientDetailFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         view = inflater.inflate(R.layout.fragment_client_detail, container, false)
-
         client = arguments?.get(BUNDLE_POSITION) as Client?
         initView()
         viewModel.clientLiveData.observe(this, Observer {

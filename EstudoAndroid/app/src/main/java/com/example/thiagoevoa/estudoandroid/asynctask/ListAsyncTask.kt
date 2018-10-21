@@ -2,6 +2,7 @@ package com.example.thiagoevoa.estudoandroid.asynctask
 
 import android.os.AsyncTask
 import android.util.Log
+import com.example.thiagoevoa.estudoandroid.util.RESPONSE_OK
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -17,7 +18,9 @@ class ListAsyncTask(private val url: String) : AsyncTask<String, Void, String>()
                         Request.Builder().url("/$url/${params[0]}").build()).execute()
             }
 
-            result = response?.body()?.string()
+            if(response.code() == RESPONSE_OK){
+                result = response.body()?.string()
+            }
         } catch (ex: Exception) {
             Log.e("Error: ", ex.message)
         }

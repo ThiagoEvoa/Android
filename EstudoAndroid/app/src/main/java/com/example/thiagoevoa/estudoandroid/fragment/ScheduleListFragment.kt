@@ -8,9 +8,10 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.*
-import android.widget.AdapterView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.thiagoevoa.estudoandroid.R
 import com.example.thiagoevoa.estudoandroid.R.id.action_search
@@ -26,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_schedule_list.view.*
 class ScheduleListFragment : Fragment() {
     internal var view: View? = null
     internal var menu: Menu? = null
-    private var row: View? = null
+    private var row: LinearLayout? = null
     private var menuDelete: MenuItem? = null
     private var menuSearch: MenuItem? = null
     private var searchView: SearchView? = null
@@ -58,7 +59,8 @@ class ScheduleListFragment : Fragment() {
                 } else {
                     txtMessage?.visibility = View.GONE
                 }
-                view?.listView_schedule_fragment!!.adapter = ScheduleAdapter(activity!!.baseContext, it!!)
+                view?.recycler_schedule_fragment!!.layoutManager = LinearLayoutManager(activity!!.baseContext)
+                view?.recycler_schedule_fragment!!.adapter = ScheduleAdapter(activity!!, it!!)
             })
         }
     }
@@ -111,37 +113,6 @@ class ScheduleListFragment : Fragment() {
         view?.swipe_schedule?.setOnRefreshListener {
             refreshList()
         }
-
-        view?.listView_schedule_fragment?.onItemClickListener = (AdapterView.OnItemClickListener
-        { parent, view, position, id ->
-            if (resources.getBoolean(R.bool.tablet)) {
-                activity!!.supportFragmentManager
-                        .beginTransaction()
-                        .addToBackStack(null)
-                        .replace(R.id.detail_schedule, ScheduleDetailFragment().newInstance(viewModel.schedulesLiveData.value?.get(position)), SCHEDULE_DETAIL_FRAGMENT).commit()
-            } else {
-                val intent = Intent(activity!!.baseContext, ScheduleDetailActivity::class.java)
-                intent.putExtra(EXTRA_SCHEDULE, viewModel.schedulesLiveData.value?.get(position))
-                activity!!.startActivity(intent)
-            }
-        })
-
-        view?.listView_schedule_fragment?.onItemLongClickListener = (AdapterView.OnItemLongClickListener
-        { parent, view, position, id ->
-            row = if (row == null) {
-                view
-            } else {
-                row!!.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.colorWhite))
-                view
-            }
-
-            menuSearch?.isVisible = false
-            view!!.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.light_grey))
-            menuDelete?.isEnabled = true
-            menuDelete?.isVisible = true
-            viewModel.scheduleLiveData.value = viewModel.schedulesLiveData.value?.get(position)
-            true
-        })
     }
 
     private fun refreshList() {
@@ -160,5 +131,32 @@ class ScheduleListFragment : Fragment() {
             searchView!!.setQuery("", false)
             searchView!!.isIconified = true
         }
+    }
+
+    fun itemClicked(position: Int) {
+        if (resources.getBoolean(R.bool.tablet)) {
+            activity!!.supportFragmentManager
+                    .beginTransaction()
+                    .addToBackStack(null)
+                    .replace(R.id.detail_schedule, ScheduleDetailFragment().newInstance(viewModel.schedulesLiveData.value?.get(position)), SCHEDULE_DETAIL_FRAGMENT).commit()
+        } else {
+            val intent = Intent(activity!!.baseContext, ScheduleDetailActivity::class.java)
+            intent.putExtra(EXTRA_SCHEDULE, viewModel.schedulesLiveData.value?.get(position))
+            startActivity(intent)
+        }
+    }
+
+    fun itemLongClicked(position: Int, view: ScheduleAdapter.ViewHolder) {
+        row = if (row == null) {
+            view.itemLayout
+        } else {
+            row?.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.colorWhite))
+            view.itemLayout
+        }
+        menuSearch?.isVisible = false
+        row?.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.light_grey))
+        menuDelete?.isEnabled = true
+        menuDelete?.isVisible = true
+        viewModel.scheduleLiveData.value = viewModel.schedulesLiveData.value?.get(position)
     }
 }

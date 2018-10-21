@@ -24,7 +24,6 @@ class ProfessionalDetailFragment : Fragment() {
     internal var view: View? = null
     private var professional: Professional? = null
     private var progressBar: ProgressBar? = null
-
     private val viewModel: ProfessionalViewModel by lazy {
         ViewModelProviders.of(this).get(ProfessionalViewModel::class.java)
     }
@@ -45,7 +44,6 @@ class ProfessionalDetailFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         view = inflater.inflate(R.layout.fragment_professional_detail, container, false)
-
         professional = arguments?.get(BUNDLE_POSITION) as Professional?
         initView()
         viewModel.professionalLiveData.observe(this, Observer {

@@ -1,43 +1,49 @@
 package com.example.thiagoevoa.estudoandroid.adapter
 
-import android.content.Context
+import android.support.v4.app.FragmentActivity
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import android.widget.LinearLayout
 import android.widget.TextView
-import com.example.thiagoevoa.estudoandroid.R.layout.item_schedule
+import com.example.thiagoevoa.estudoandroid.R
+import com.example.thiagoevoa.estudoandroid.fragment.ScheduleListFragment
 import com.example.thiagoevoa.estudoandroid.model.Schedule
 import kotlinx.android.synthetic.main.item_schedule.view.*
 
-class ScheduleAdapter(context: Context, objects: MutableList<Schedule>) : ArrayAdapter<Schedule>(context, 0, objects) {
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        val schedule: Schedule = getItem(position)!!
-        val viewHolder: ViewHolder
-        var view = convertView
-
-        if (view == null) {
-            view = LayoutInflater.from(context).inflate(item_schedule, parent, false)
-            viewHolder = ViewHolder(view)
-        } else {
-            viewHolder = view.tag as ViewHolder
-        }
-        viewHolder.date.text = schedule.date
-        viewHolder.initialTime.text = schedule.initialTime
-        viewHolder.finalTime.text = schedule.finalTime
-        viewHolder.professional.text = schedule.professionalId
-        viewHolder.client.text = schedule.clientId
-        return view
+class ScheduleAdapter(private val activity: FragmentActivity, private val objects: MutableList<Schedule>) : RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_schedule, parent, false))
     }
 
-    class ViewHolder(parent: View) {
-        var date: TextView = parent.txt_date
-        var initialTime: TextView = parent.txt_initialTime
-        var finalTime: TextView = parent.txt_final_time
-        var professional: TextView = parent.txt_professional
-        var client: TextView = parent.txt_client
-        init {
-            parent.tag = this
+    override fun getItemCount(): Int {
+        return objects.size
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.date.text = objects[position].date
+        holder.initialTime.text = objects[position].initialTime
+        holder.finalTime.text = objects[position].finalTime
+        holder.professional.text = objects[position].professionalId
+        holder.client.text = objects[position].clientId
+
+        holder.itemView.setOnClickListener {
+            (activity.supportFragmentManager.fragments[0] as ScheduleListFragment).itemClicked(position)
         }
+
+        holder.itemView.setOnLongClickListener {
+            (activity.supportFragmentManager.fragments[0] as ScheduleListFragment).itemLongClicked(position, holder)
+            true
+        }
+    }
+
+    class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+        var date: TextView = view.txt_date
+        var initialTime: TextView = view.txt_initialTime
+        var finalTime: TextView = view.txt_final_time
+        var professional: TextView = view.txt_professional
+        var client: TextView = view.txt_client
+        var itemLayout: LinearLayout = view.item_layout
     }
 }
