@@ -5,19 +5,19 @@
         android:id="@+id/action_search"
         android:title="Search"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_search_black_24dp"
+        android:icon="@drawable/ic_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:visible="false"/>
     <item
         android:id="@+id/action_save"
         android:title="Save"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_check_black_24dp"
+        android:icon="@drawable/ic_check"
         android:visible="false"/>
     <item
         android:id="@+id/action_delete"
         android:title="Delete"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_delete_black_24dp"
+        android:icon="@drawable/ic_delete"
         android:visible="false"/>
 </menu>

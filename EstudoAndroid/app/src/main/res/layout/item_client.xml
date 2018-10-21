@@ -12,7 +12,7 @@
         android:id="@+id/img_client"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        app:srcCompat="@drawable/ic_person_black"
+        app:srcCompat="@drawable/ic_client"
         tools:ignore="VectorDrawableCompat" />
 
     <LinearLayout

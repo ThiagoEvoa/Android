@@ -26,7 +26,7 @@ class ClientAdapter(context: Context, objects: MutableList<Client>) : ArrayAdapt
         }
         viewHolder.clientCpf.text = client.cpf
         viewHolder.clientName.text = client.name
-        viewHolder.clientImage.setImageResource(R.drawable.ic_person_black)
+        viewHolder.clientImage.setImageResource(R.drawable.ic_client)
         return view
     }
 

@@ -24,7 +24,7 @@ class ProfessionalAdapter(context: Context, objects: MutableList<Professional>) 
         } else {
             viewHolder = view.tag as ViewHolder
         }
-        viewHolder.professionalImage.setImageResource(R.drawable.ic_person_black)
+        viewHolder.professionalImage.setImageResource(R.drawable.ic_client)
         viewHolder.professionalCpfCnjpj.text = professional.cpf_cnpj
         viewHolder.professionalName.text = professional.name
         return view
