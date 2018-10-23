@@ -29,5 +29,12 @@ const val SHARED_PREFERENCES = "sharedPreference"
 const val TOKEN = "token"
 
 //Response Code
-
 const val RESPONSE_OK = 200
+
+//Firebase Messaging
+const val NOTIFICATION_CHANNEL_ID = "notification_id"
+const val NOTIFICATION_NAME = "notification"
+const val NOTIFICATION_CONTENT_INFO = "info"
+const val NOTIFICATION_TITLE = "title"
+const val NOTIFICATION_BODY = "body"
+const val DEFAULT_TOPIC = "all"

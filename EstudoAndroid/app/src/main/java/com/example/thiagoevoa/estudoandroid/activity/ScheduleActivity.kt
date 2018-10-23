@@ -11,7 +11,9 @@ import android.view.Menu
 import android.view.MenuItem
 import com.example.thiagoevoa.estudoandroid.R
 import com.example.thiagoevoa.estudoandroid.fragment.ScheduleListFragment
+import com.example.thiagoevoa.estudoandroid.util.getFirebaseToken
 import com.example.thiagoevoa.estudoandroid.util.logout
+import com.example.thiagoevoa.estudoandroid.util.registerToTopic
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_schedule.*
 import kotlinx.android.synthetic.main.app_bar_schedule.*
@@ -26,6 +28,8 @@ class ScheduleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         setContentView(R.layout.activity_schedule)
         setSupportActionBar(toolbar_schedule)
 
+        getFirebaseToken()
+        registerToTopic()
         auth = FirebaseAuth.getInstance()
 
         btn_add_schedule.setOnClickListener { view ->

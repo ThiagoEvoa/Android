@@ -25,6 +25,8 @@
     <string name="title_activity_professional_detail">Professional</string>
     <string name="title_activity_schedule">Schedules</string>
     <string name="title_activity_schedule_detail">Schedule</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_notification">Notification</string>
 
     <!-- Success Messages -->
     <string name="success_create_user">Account created successfully.</string>

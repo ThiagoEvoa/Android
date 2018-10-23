@@ -136,7 +136,7 @@ class ClientListFragment : Fragment() {
                 view
             }
             menuSearch?.isVisible = false
-            view!!.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.material_grey_300))
+            view!!.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.light_grey))
             menuDelete?.isEnabled = true
             menuDelete?.isVisible = true
             viewModel.clientLiveData.value = viewModel.clientsLiveData.value?.get(position)
