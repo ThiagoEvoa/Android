@@ -38,3 +38,6 @@ const val NOTIFICATION_CONTENT_INFO = "info"
 const val NOTIFICATION_TITLE = "title"
 const val NOTIFICATION_BODY = "body"
 const val DEFAULT_TOPIC = "all"
+
+//Permissions
+const val REQUEST_PERMISSION = 1

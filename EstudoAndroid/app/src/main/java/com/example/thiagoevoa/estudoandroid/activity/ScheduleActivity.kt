@@ -1,6 +1,8 @@
 package com.example.thiagoevoa.estudoandroid.activity
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -11,9 +13,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.example.thiagoevoa.estudoandroid.R
 import com.example.thiagoevoa.estudoandroid.fragment.ScheduleListFragment
-import com.example.thiagoevoa.estudoandroid.util.getFirebaseToken
-import com.example.thiagoevoa.estudoandroid.util.logout
-import com.example.thiagoevoa.estudoandroid.util.registerToTopic
+import com.example.thiagoevoa.estudoandroid.util.*
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_schedule.*
 import kotlinx.android.synthetic.main.app_bar_schedule.*
@@ -85,7 +85,7 @@ class ScheduleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 startActivity(Intent(this, ClientActivity::class.java))
             }
             R.id.nav_tools -> {
-
+                requestPermission(this, arrayOf(Manifest.permission.READ_CONTACTS))
             }
             R.id.nav_share -> {
 
@@ -96,5 +96,18 @@ class ScheduleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         }
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_PERMISSION -> {
+                if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    showToast(this, "Please grant permission!")
+                }else{
+                    showToast(this, "Permission granted!")
+                }
+                return
+            }
+        }
     }
 }

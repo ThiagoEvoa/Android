@@ -3,6 +3,9 @@ package com.example.thiagoevoa.estudoandroid.util
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.Window
@@ -38,6 +41,14 @@ fun logout(activity: Activity, auth: FirebaseAuth) {
 
 fun showToast(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+}
+
+fun requestPermission(activity: Activity, permissions: Array<String>) {
+    for(permission in permissions){
+        if (ContextCompat.checkSelfPermission(activity.baseContext, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, permissions, REQUEST_PERMISSION)
+        }
+    }
 }
 
 fun createSharedPreference(context: Context, value: String) {
