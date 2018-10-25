@@ -22,7 +22,8 @@ const val EXTRA_PROFESSIONAL = "extraProfessional"
 const val BUNDLE_POSITION = "position"
 
 //ContentType
-val CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8")
+val CONTENT_TYPE_JSON = MediaType.parse("application/json; charset=utf-8")
+const val CONTENT_TYPE_TEXT_PLAIN = "text/plain"
 
 //SharedPreferences
 const val SHARED_PREFERENCES = "sharedPreference"

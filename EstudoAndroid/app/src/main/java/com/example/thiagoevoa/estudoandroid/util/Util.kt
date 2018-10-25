@@ -11,6 +11,7 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
+import com.example.thiagoevoa.estudoandroid.R
 import com.example.thiagoevoa.estudoandroid.activity.LoginActivity
 import com.example.thiagoevoa.estudoandroid.model.Client
 import com.example.thiagoevoa.estudoandroid.model.Professional
@@ -44,11 +45,21 @@ fun showToast(context: Context, message: String) {
 }
 
 fun requestPermission(activity: Activity, permissions: Array<String>) {
-    for(permission in permissions){
+    for (permission in permissions) {
         if (ContextCompat.checkSelfPermission(activity.baseContext, permission) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity, permissions, REQUEST_PERMISSION)
         }
     }
+}
+
+fun share(activity: Activity, subject: String, text: String) {
+    activity.startActivity(Intent.createChooser(
+            Intent(android.content.Intent.ACTION_SEND)
+                    .setType(CONTENT_TYPE_TEXT_PLAIN)
+                    .putExtra(android.content.Intent.EXTRA_SUBJECT, subject)
+                    .putExtra(android.content.Intent.EXTRA_TEXT, text),
+            activity.resources.getString(R.string.success_share)
+    ))
 }
 
 fun createSharedPreference(context: Context, value: String) {

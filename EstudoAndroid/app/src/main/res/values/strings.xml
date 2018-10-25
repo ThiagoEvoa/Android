@@ -41,6 +41,7 @@
     <string name="success_no_client">We did not find any client.</string>
     <string name="success_no_professional">We did not find any professional.</string>
     <string name="success_no_schedule">We did not find any schedule.</string>
+    <string name="success_share">Share</string>
 
     <!-- Error Messages -->
     <string name="error_edt_name">Fill the name field to continue.</string>

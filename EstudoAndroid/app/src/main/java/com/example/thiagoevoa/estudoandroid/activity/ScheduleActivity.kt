@@ -88,7 +88,7 @@ class ScheduleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 requestPermission(this, arrayOf(Manifest.permission.READ_CONTACTS))
             }
             R.id.nav_share -> {
-
+                share(this, "Subject", "Texte")
             }
             R.id.nav_logout -> {
                 logout(this, auth!!)
@@ -103,7 +103,7 @@ class ScheduleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             REQUEST_PERMISSION -> {
                 if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     showToast(this, "Please grant permission!")
-                }else{
+                } else {
                     showToast(this, "Permission granted!")
                 }
                 return

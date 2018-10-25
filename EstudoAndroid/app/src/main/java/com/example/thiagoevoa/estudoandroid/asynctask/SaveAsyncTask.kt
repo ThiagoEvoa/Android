@@ -2,7 +2,7 @@ package com.example.thiagoevoa.estudoandroid.asynctask
 
 import android.os.AsyncTask
 import android.util.Log
-import com.example.thiagoevoa.estudoandroid.util.CONTENT_TYPE
+import com.example.thiagoevoa.estudoandroid.util.CONTENT_TYPE_JSON
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -14,7 +14,7 @@ class SaveAsyncTask(private val url: String, private val value: String) : AsyncT
         try {
             response = OkHttpClient().newCall(Request.Builder()
                             .url(url)
-                            .post(RequestBody.create(CONTENT_TYPE, value))
+                            .post(RequestBody.create(CONTENT_TYPE_JSON, value))
                             .build())
                     .execute()
         } catch (ex: Exception) {
