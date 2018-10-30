@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_search"
-        android:title="Search"
+        android:title="@string/action_search"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:visible="false"/>
     <item
         android:id="@+id/action_save"
-        android:title="Save"
+        android:title="@string/action_save"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_check"
         android:visible="false"/>
     <item
         android:id="@+id/action_delete"
-        android:title="Delete"
+        android:title="@string/action_delete"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_delete"
         android:visible="false"/>

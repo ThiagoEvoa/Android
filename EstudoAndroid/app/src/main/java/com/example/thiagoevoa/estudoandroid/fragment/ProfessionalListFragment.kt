@@ -71,7 +71,7 @@ class ProfessionalListFragment : Fragment() {
 
         val menuItem = menu?.findItem(R.id.action_search)
         searchView = menuItem?.actionView as SearchView
-
+        searchView?.maxWidth = Int.MAX_VALUE
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.professionalsLiveData.value = getProfessionalFromJSON(ListAsyncTask(URL_PROFESSIONAL).execute(query).get())

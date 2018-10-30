@@ -67,4 +67,7 @@
     <string name="error_delete_user">Error while trying deleting account.</string>
     <string name="error_delete_schedule">Error while trying deleting schedule.</string>
     <string name="error_send_email">Error while sending an e-mail to reset the password.</string>
+    <string name="action_search">Search</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
 </resources>

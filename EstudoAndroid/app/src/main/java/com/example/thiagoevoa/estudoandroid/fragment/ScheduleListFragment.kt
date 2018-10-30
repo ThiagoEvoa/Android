@@ -74,6 +74,7 @@ class ScheduleListFragment : Fragment() {
 
         val menuItem = menu?.findItem(action_search)
         searchView = menuItem?.actionView as SearchView
+        searchView?.maxWidth = Int.MAX_VALUE
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.schedulesLiveData.value = getScheduleFromJSON(ListAsyncTask(URL_SCHEDULE).execute(query).get())

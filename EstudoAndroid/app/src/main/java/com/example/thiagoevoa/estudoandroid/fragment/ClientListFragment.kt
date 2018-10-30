@@ -71,7 +71,7 @@ class ClientListFragment : Fragment() {
 
         val menuItem = menu?.findItem(R.id.action_search)
         searchView = menuItem?.actionView as SearchView
-
+        searchView?.maxWidth = Int.MAX_VALUE
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.clientsLiveData.value = getClientFromJSON(ListAsyncTask(URL_CLIENT).execute(query).get())
