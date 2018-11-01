@@ -39,12 +39,15 @@ class ScheduleListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        refreshList()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         view = inflater.inflate(R.layout.fragment_schedule_list, container, false)
         initView()
+        setViewModel()
+        setAdapter()
         return view
     }
 
@@ -52,16 +55,7 @@ class ScheduleListFragment : Fragment() {
         super.onResume()
         if (ListAsyncTask(URL_SCHEDULE).status != AsyncTask.Status.RUNNING) {
             refreshList()
-            viewModel.schedulesLiveData.observe(this, Observer {
-                if (it?.size == 0) {
-                    txtMessage?.text = resources.getString(R.string.success_no_schedule)
-                    txtMessage?.visibility = View.VISIBLE
-                } else {
-                    txtMessage?.visibility = View.GONE
-                }
-                view?.recycler_schedule_fragment!!.layoutManager = LinearLayoutManager(activity!!.baseContext)
-                view?.recycler_schedule_fragment!!.adapter = ScheduleAdapter(activity!!, it!!)
-            })
+            setAdapter()
         }
     }
 
@@ -114,6 +108,22 @@ class ScheduleListFragment : Fragment() {
         view?.swipe_schedule?.setOnRefreshListener {
             refreshList()
         }
+    }
+
+    private fun setViewModel() {
+        viewModel.schedulesLiveData.observe(this, Observer {
+            if (it?.size == 0) {
+                txtMessage?.text = resources.getString(R.string.success_no_schedule)
+                txtMessage?.visibility = View.VISIBLE
+            } else {
+                txtMessage?.visibility = View.GONE
+            }
+        })
+    }
+
+    private fun setAdapter(){
+        view?.recycler_schedule_fragment!!.layoutManager = LinearLayoutManager(activity!!.baseContext)
+        view?.recycler_schedule_fragment!!.adapter = ScheduleAdapter(activity!!, viewModel.schedulesLiveData.value!!)
     }
 
     private fun refreshList() {
