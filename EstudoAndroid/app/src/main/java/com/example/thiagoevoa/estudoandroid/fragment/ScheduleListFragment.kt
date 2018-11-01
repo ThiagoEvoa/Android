@@ -47,7 +47,6 @@ class ScheduleListFragment : Fragment() {
         view = inflater.inflate(R.layout.fragment_schedule_list, container, false)
         initView()
         setViewModel()
-        setAdapter()
         return view
     }
 
@@ -55,7 +54,6 @@ class ScheduleListFragment : Fragment() {
         super.onResume()
         if (ListAsyncTask(URL_SCHEDULE).status != AsyncTask.Status.RUNNING) {
             refreshList()
-            setAdapter()
         }
     }
 
@@ -118,16 +116,12 @@ class ScheduleListFragment : Fragment() {
             } else {
                 txtMessage?.visibility = View.GONE
             }
+            view?.recycler_schedule_fragment!!.layoutManager = LinearLayoutManager(activity!!.baseContext)
+            view?.recycler_schedule_fragment!!.adapter = ScheduleAdapter(activity!!, viewModel.schedulesLiveData.value!!)
         })
     }
 
-    private fun setAdapter(){
-        view?.recycler_schedule_fragment!!.layoutManager = LinearLayoutManager(activity!!.baseContext)
-        view?.recycler_schedule_fragment!!.adapter = ScheduleAdapter(activity!!, viewModel.schedulesLiveData.value!!)
-    }
-
     private fun refreshList() {
-        view?.swipe_schedule?.isRefreshing = true
         viewModel.schedulesLiveData.value = getScheduleFromJSON(ListAsyncTask(URL_SCHEDULE).execute().get())
         view?.swipe_schedule?.isRefreshing = false
     }
