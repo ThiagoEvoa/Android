@@ -39,22 +39,30 @@ class ScheduleListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        refreshList()
+        viewModel.schedulesLiveData.observe(this, Observer {
+            if (it?.size == 0) {
+                txtMessage?.text = resources.getString(R.string.success_no_schedule)
+                txtMessage?.visibility = View.VISIBLE
+            } else {
+                txtMessage?.visibility = View.GONE
+            }
+            view?.recycler_schedule_fragment!!.layoutManager = LinearLayoutManager(activity!!.baseContext)
+            view?.recycler_schedule_fragment!!.adapter = ScheduleAdapter(activity!!, viewModel.schedulesLiveData.value!!)
+        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         view = inflater.inflate(R.layout.fragment_schedule_list, container, false)
         initView()
-        setViewModel()
         return view
     }
 
     override fun onResume() {
         super.onResume()
-        if (ListAsyncTask(URL_SCHEDULE).status != AsyncTask.Status.RUNNING) {
-            refreshList()
-        }
+//        if (ListAsyncTask(URL_SCHEDULE).status != AsyncTask.Status.RUNNING) {
+        refreshList()
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -69,7 +77,7 @@ class ScheduleListFragment : Fragment() {
         searchView?.maxWidth = Int.MAX_VALUE
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.schedulesLiveData.value = getScheduleFromJSON(ListAsyncTask(URL_SCHEDULE).execute(query).get())
+                viewModel.getSchedules(query)
                 return false
             }
 
@@ -77,6 +85,10 @@ class ScheduleListFragment : Fragment() {
                 return false
             }
         })
+        searchView?.setOnCloseListener {
+            refreshList()
+            false
+        }
         menuSearch?.isVisible = true
     }
 
@@ -86,7 +98,7 @@ class ScheduleListFragment : Fragment() {
                 true
             }
             R.id.action_delete -> {
-                if (DeleteAsyncTask(URL_SCHEDULE, Gson().toJson(viewModel.scheduleLiveData.value)).execute().get() == RESPONSE_OK) {
+                if (DeleteAsyncTask(URL_SCHEDULE, Gson().toJson(viewModel.getSchedule())).execute().get() == RESPONSE_OK) {
                     menuDelete?.isVisible = false
                     menuSearch?.isVisible = true
                     refreshList()
@@ -102,27 +114,16 @@ class ScheduleListFragment : Fragment() {
 
     private fun initView() {
         txtMessage = view?.txt_schedule_message
-
         view?.swipe_schedule?.setOnRefreshListener {
             refreshList()
         }
     }
 
-    private fun setViewModel() {
-        viewModel.schedulesLiveData.observe(this, Observer {
-            if (it?.size == 0) {
-                txtMessage?.text = resources.getString(R.string.success_no_schedule)
-                txtMessage?.visibility = View.VISIBLE
-            } else {
-                txtMessage?.visibility = View.GONE
-            }
-            view?.recycler_schedule_fragment!!.layoutManager = LinearLayoutManager(activity!!.baseContext)
-            view?.recycler_schedule_fragment!!.adapter = ScheduleAdapter(activity!!, viewModel.schedulesLiveData.value!!)
-        })
-    }
-
     private fun refreshList() {
-        viewModel.schedulesLiveData.value = getScheduleFromJSON(ListAsyncTask(URL_SCHEDULE).execute().get())
+        if (ListAsyncTask(URL_SCHEDULE).status != AsyncTask.Status.RUNNING) {
+            view?.swipe_schedule?.isRefreshing = true
+            viewModel.getSchedules()
+        }
         view?.swipe_schedule?.isRefreshing = false
     }
 
@@ -143,10 +144,10 @@ class ScheduleListFragment : Fragment() {
             activity!!.supportFragmentManager
                     .beginTransaction()
                     .addToBackStack(null)
-                    .replace(R.id.detail_schedule, ScheduleDetailFragment().newInstance(viewModel.schedulesLiveData.value?.get(position)), SCHEDULE_DETAIL_FRAGMENT).commit()
+                    .replace(R.id.detail_schedule, ScheduleDetailFragment().newInstance(viewModel.getSchedule(position)), SCHEDULE_DETAIL_FRAGMENT).commit()
         } else {
             val intent = Intent(activity!!.baseContext, ScheduleDetailActivity::class.java)
-            intent.putExtra(EXTRA_SCHEDULE, viewModel.schedulesLiveData.value?.get(position))
+            intent.putExtra(EXTRA_SCHEDULE, viewModel.getSchedule(position))
             startActivity(intent)
         }
     }
@@ -162,6 +163,6 @@ class ScheduleListFragment : Fragment() {
         row?.setBackgroundColor(ContextCompat.getColor(activity!!.baseContext, R.color.light_grey))
         menuDelete?.isEnabled = true
         menuDelete?.isVisible = true
-        viewModel.scheduleLiveData.value = viewModel.schedulesLiveData.value?.get(position)
+        viewModel.getSchedule(position)
     }
 }

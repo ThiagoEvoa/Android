@@ -100,7 +100,7 @@ class ScheduleDetailFragment : Fragment() {
             }
             else -> {
                 progressBar?.visibility = View.VISIBLE
-                viewModel.scheduleLiveData.value = Schedule(schedule?._id, edt_date.text.toString(), edt_initial_time.text.toString(), edt_final_time.text.toString(), edt_client.text.toString(), edt_professional.text.toString())
+                viewModel.setSchedule(Schedule(schedule?._id, edt_date.text.toString(), edt_initial_time.text.toString(), edt_final_time.text.toString(), edt_client.text.toString(), edt_professional.text.toString()))
                 if (schedule?._id == null) {
                     if (SaveAsyncTask(URL_SCHEDULE, Gson().toJson(viewModel.scheduleLiveData.value)).execute().get() == RESPONSE_OK) {
                         showToast(activity!!.baseContext, resources.getString(R.string.success_create_schedule))
