@@ -60,9 +60,7 @@ class ScheduleListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-//        if (ListAsyncTask(URL_SCHEDULE).status != AsyncTask.Status.RUNNING) {
         refreshList()
-//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
