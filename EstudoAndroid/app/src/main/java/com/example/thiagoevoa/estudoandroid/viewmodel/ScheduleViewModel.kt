@@ -11,7 +11,7 @@ class ScheduleViewModel : ViewModel() {
     var schedulesLiveData = MutableLiveData<MutableList<Schedule>>()
     var scheduleLiveData = MutableLiveData<Schedule>()
 
-    fun getSchedules() {
+    fun getSchedules(){
         schedulesLiveData.value = getScheduleFromJSON(ListAsyncTask(URL_SCHEDULE).execute().get())
     }
 

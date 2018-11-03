@@ -39,21 +39,21 @@ class ScheduleListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        viewModel.schedulesLiveData.observe(this, Observer {
-            if (it?.size == 0) {
-                txtMessage?.text = resources.getString(R.string.success_no_schedule)
-                txtMessage?.visibility = View.VISIBLE
-            } else {
-                txtMessage?.visibility = View.GONE
-            }
-            view?.recycler_schedule_fragment!!.layoutManager = LinearLayoutManager(activity!!.baseContext)
-            view?.recycler_schedule_fragment!!.adapter = ScheduleAdapter(activity!!, viewModel.schedulesLiveData.value!!)
-        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         view = inflater.inflate(R.layout.fragment_schedule_list, container, false)
+        refreshList()
+        viewModel.schedulesLiveData.observe(this, Observer {
+            if (it?.size == 0) {
+                view?.txt_schedule_message?.visibility = View.VISIBLE
+            } else {
+                view?.txt_schedule_message?.visibility = View.GONE
+            }
+            view?.recycler_schedule_fragment!!.layoutManager = LinearLayoutManager(activity!!.baseContext)
+            view?.recycler_schedule_fragment!!.adapter = ScheduleAdapter(activity!!, it!!)
+        })
         initView()
         return view
     }
