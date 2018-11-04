@@ -3,24 +3,26 @@ package com.example.thiagoevoa.estudoandroid.fragment
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.*
 import android.widget.ProgressBar
 import com.example.thiagoevoa.estudoandroid.R
-import com.example.thiagoevoa.estudoandroid.asynctask.SaveAsyncTask
-import com.example.thiagoevoa.estudoandroid.asynctask.UpdateAsyncTask
 import com.example.thiagoevoa.estudoandroid.model.Schedule
-import com.example.thiagoevoa.estudoandroid.util.BUNDLE_POSITION
-import com.example.thiagoevoa.estudoandroid.util.RESPONSE_OK
-import com.example.thiagoevoa.estudoandroid.util.URL_SCHEDULE
-import com.example.thiagoevoa.estudoandroid.util.showToast
+import com.example.thiagoevoa.estudoandroid.util.*
 import com.example.thiagoevoa.estudoandroid.viewmodel.ScheduleViewModel
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_schedule_detail.*
 import kotlinx.android.synthetic.main.fragment_schedule_detail.view.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.Response
 
 class ScheduleDetailFragment : Fragment() {
+    private var response: Response? = null
     internal var view: View? = null
     private var schedule: Schedule? = null
     private var progressBar: ProgressBar? = null
@@ -99,23 +101,73 @@ class ScheduleDetailFragment : Fragment() {
                 showToast(activity!!.baseContext, resources.getString(R.string.error_edt_professional))
             }
             else -> {
-                progressBar?.visibility = View.VISIBLE
-                viewModel.setSchedule(Schedule(schedule?._id, edt_date.text.toString(), edt_initial_time.text.toString(), edt_final_time.text.toString(), edt_client.text.toString(), edt_professional.text.toString()))
+                viewModel.scheduleLiveData.value = Schedule(schedule?._id, edt_date.text.toString(), edt_initial_time.text.toString(), edt_final_time.text.toString(), edt_client.text.toString(), edt_professional.text.toString())
                 if (schedule?._id == null) {
-                    if (SaveAsyncTask(URL_SCHEDULE, Gson().toJson(viewModel.scheduleLiveData.value)).execute().get() == RESPONSE_OK) {
-                        showToast(activity!!.baseContext, resources.getString(R.string.success_create_schedule))
-                    } else {
-                        showToast(activity!!.baseContext, resources.getString(R.string.error_create_schedule))
-                    }
+                    SaveAsyncTask().execute()
                 } else {
-                    if (UpdateAsyncTask(URL_SCHEDULE, Gson().toJson(viewModel.scheduleLiveData.value)).execute().get() == RESPONSE_OK) {
-                        showToast(activity!!.baseContext, resources.getString(R.string.success_update_schedule))
-                    } else {
-                        showToast(activity!!.baseContext, resources.getString(R.string.error_update_schedule))
-                    }
+                    UpdateAsyncTask().execute()
                 }
-                progressBar?.visibility = View.GONE
             }
+        }
+    }
+
+    private inner class SaveAsyncTask : AsyncTask<Void, Void, Response>() {
+        override fun onPreExecute() {
+            super.onPreExecute()
+            view?.pb_schedule?.visibility = View.VISIBLE
+        }
+
+        override fun doInBackground(vararg params: Void?): Response? {
+            try {
+                response = OkHttpClient().newCall(Request.Builder()
+                        .url(URL_SCHEDULE)
+                        .post(RequestBody.create(CONTENT_TYPE_JSON, Gson().toJson(viewModel.scheduleLiveData.value)))
+                        .build())
+                        .execute()
+            } catch (ex: Exception) {
+                Log.e("Error: ", ex.message)
+            }
+            return response
+        }
+
+        override fun onPostExecute(result: Response?) {
+            super.onPostExecute(result)
+            if(result?.code() == RESPONSE_OK){
+                showToast(activity!!.baseContext, resources.getString(R.string.success_create_schedule))
+            }else{
+                showToast(activity!!.baseContext, resources.getString(R.string.error_create_schedule))
+            }
+            view?.pb_schedule?.visibility = View.GONE
+        }
+    }
+
+    private inner class UpdateAsyncTask : AsyncTask<Void, Void, Response>() {
+        override fun onPreExecute() {
+            super.onPreExecute()
+            view?.pb_schedule?.visibility = View.VISIBLE
+        }
+
+        override fun doInBackground(vararg params: Void?): Response? {
+            try {
+                response = OkHttpClient().newCall(Request.Builder()
+                        .url(URL_SCHEDULE)
+                        .put(RequestBody.create(CONTENT_TYPE_JSON, Gson().toJson(viewModel.scheduleLiveData.value)))
+                        .build())
+                        .execute()
+            } catch (ex: Exception) {
+                Log.e("Error: ", ex.message)
+            }
+            return response
+        }
+
+        override fun onPostExecute(result: Response?) {
+            super.onPostExecute(result)
+            if(result?.code() == RESPONSE_OK){
+                showToast(activity!!.baseContext, resources.getString(R.string.success_update_schedule))
+            }else{
+                showToast(activity!!.baseContext, resources.getString(R.string.error_update_schedule))
+            }
+            view?.pb_schedule?.visibility = View.GONE
         }
     }
 }

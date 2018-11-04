@@ -60,6 +60,7 @@
     <string name="error_login">Error while trying to login on application.</string>
     <string name="error_create_user">Error while creating account.</string>
     <string name="error_update_user">Error while updating account.</string>
+    <string name="error_loading_schedule">Error while loading schedule.</string>
     <string name="error_create_schedule">Error while creating schedule.</string>
     <string name="error_update_schedule">Error while updating schedule.</string>
     <string name="error_update_email">Error while updating e-mail.</string>

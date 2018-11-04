@@ -6,9 +6,12 @@ import com.example.thiagoevoa.estudoandroid.util.RESPONSE_OK
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class ListAsyncTask(private val url: String) : AsyncTask<String, Void, String>() {
-    private var result: String? = null
-    override fun doInBackground(vararg params: String?): String? {
+class ListAsyncTask(private val url: String) : AsyncTask<String, Void, Void>() {
+    companion object {
+        var result: String? = null
+    }
+
+    override fun doInBackground(vararg params: String?): Void? {
         try {
             val response = if (params.isEmpty()) {
                 OkHttpClient().newCall(
@@ -24,6 +27,6 @@ class ListAsyncTask(private val url: String) : AsyncTask<String, Void, String>()
         } catch (ex: Exception) {
             Log.e("Error: ", ex.message)
         }
-        return result
+        return null
     }
 }

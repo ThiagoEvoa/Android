@@ -8,6 +8,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.AdapterView
@@ -30,6 +31,7 @@ class ProfessionalListFragment : Fragment() {
     private var menuSearch: MenuItem? = null
     private var searchView: SearchView? = null
     private var txtMessage: TextView? = null
+    private var refresh: SwipeRefreshLayout? = null
     private val viewModel: ProfessionalViewModel by lazy {
         ViewModelProviders.of(this).get(ProfessionalViewModel::class.java)
     }
@@ -74,7 +76,8 @@ class ProfessionalListFragment : Fragment() {
         searchView?.maxWidth = Int.MAX_VALUE
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.professionalsLiveData.value = getProfessionalFromJSON(ListAsyncTask(URL_PROFESSIONAL).execute(query).get())
+                ListAsyncTask(URL_PROFESSIONAL).execute(query)
+                viewModel.professionalsLiveData.value = getProfessionalFromJSON(ListAsyncTask.result)
                 return false
             }
 
@@ -106,6 +109,7 @@ class ProfessionalListFragment : Fragment() {
     }
 
     private fun initView() {
+        refresh = view?.swipe_professional
         txtMessage = view?.txt_professional_message
 
         view?.swipe_professional?.setOnRefreshListener {
@@ -146,7 +150,8 @@ class ProfessionalListFragment : Fragment() {
 
     private fun refreshList() {
         view?.swipe_professional?.isRefreshing = true
-        viewModel.professionalsLiveData.value = getProfessionalFromJSON(ListAsyncTask(URL_PROFESSIONAL).execute().get())
+        ListAsyncTask(URL_PROFESSIONAL).execute()
+        viewModel.professionalsLiveData.value = getProfessionalFromJSON(ListAsyncTask.result)
         view?.swipe_professional?.isRefreshing = false
     }
 

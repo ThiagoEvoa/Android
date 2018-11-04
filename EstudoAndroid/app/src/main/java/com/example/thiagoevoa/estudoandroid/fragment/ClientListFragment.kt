@@ -8,6 +8,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.AdapterView
@@ -30,6 +31,7 @@ class ClientListFragment : Fragment() {
     private var menuSearch: MenuItem? = null
     private var searchView: SearchView? = null
     private var txtMessage: TextView? = null
+    private var refresh: SwipeRefreshLayout? = null
     private val viewModel: ClientViewModel by lazy {
         ViewModelProviders.of(this).get(ClientViewModel::class.java)
     }
@@ -74,7 +76,8 @@ class ClientListFragment : Fragment() {
         searchView?.maxWidth = Int.MAX_VALUE
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.clientsLiveData.value = getClientFromJSON(ListAsyncTask(URL_CLIENT).execute(query).get())
+                ListAsyncTask(URL_CLIENT).execute(query)
+                viewModel.clientsLiveData.value = getClientFromJSON(ListAsyncTask.result)
                 return false
             }
 
@@ -106,6 +109,7 @@ class ClientListFragment : Fragment() {
     }
 
     private fun initView() {
+        refresh = view?.swipe_client
         txtMessage = view?.txt_client_message
 
         view?.swipe_client?.setOnRefreshListener {
@@ -146,7 +150,8 @@ class ClientListFragment : Fragment() {
 
     private fun refreshList() {
         view?.swipe_client?.isRefreshing = true
-        viewModel.clientsLiveData.value = getClientFromJSON(ListAsyncTask(URL_CLIENT).execute().get())
+        ListAsyncTask(URL_CLIENT).execute()
+        viewModel.clientsLiveData.value = getClientFromJSON(ListAsyncTask.result)
         view?.swipe_client?.isRefreshing = false
     }
 
