@@ -19,7 +19,7 @@ const val EXTRA_CLIENT = "extraClient"
 const val EXTRA_PROFESSIONAL = "extraProfessional"
 
 //Bundle
-const val BUNDLE_POSITION = "position"
+const val BUNDLE_ITEM = "position"
 
 //ContentType
 val CONTENT_TYPE_JSON = MediaType.parse("application/json; charset=utf-8")

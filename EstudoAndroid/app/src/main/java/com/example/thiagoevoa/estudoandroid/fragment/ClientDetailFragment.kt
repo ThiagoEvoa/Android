@@ -7,18 +7,21 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
 import android.widget.ProgressBar
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.example.thiagoevoa.estudoandroid.R
 import com.example.thiagoevoa.estudoandroid.asynctask.ListAsyncTask
-import com.example.thiagoevoa.estudoandroid.asynctask.SaveAsyncTask
 import com.example.thiagoevoa.estudoandroid.asynctask.UpdateAsyncTask
 import com.example.thiagoevoa.estudoandroid.model.Client
-import com.example.thiagoevoa.estudoandroid.util.BUNDLE_POSITION
+import com.example.thiagoevoa.estudoandroid.util.BUNDLE_ITEM
 import com.example.thiagoevoa.estudoandroid.util.RESPONSE_OK
 import com.example.thiagoevoa.estudoandroid.util.URL_CLIENT
 import com.example.thiagoevoa.estudoandroid.util.showToast
 import com.example.thiagoevoa.estudoandroid.viewmodel.ClientViewModel
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_client_detail.view.*
+import org.json.JSONObject
 
 class ClientDetailFragment : Fragment() {
     internal var view: View? = null
@@ -31,7 +34,7 @@ class ClientDetailFragment : Fragment() {
     fun newInstance(client: Client?): ClientDetailFragment {
         val fragment = ClientDetailFragment()
         val args = Bundle()
-        args.putParcelable(BUNDLE_POSITION, client)
+        args.putParcelable(BUNDLE_ITEM, client)
         fragment.arguments = args
         return fragment
     }
@@ -44,7 +47,7 @@ class ClientDetailFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         view = inflater.inflate(R.layout.fragment_client_detail, container, false)
-        client = arguments?.get(BUNDLE_POSITION) as Client?
+        client = arguments?.get(BUNDLE_ITEM) as Client?
         initView()
         viewModel.clientLiveData.observe(this, Observer {
             view?.edt_client_cpf?.setText(it?.cpf)
@@ -87,11 +90,23 @@ class ClientDetailFragment : Fragment() {
                 progressBar?.visibility = View.VISIBLE
                 viewModel.clientLiveData.value = Client(client?._id, view?.edt_client_cpf?.text.toString(), view?.edt_client_name?.text.toString())
                 if (client?._id == null) {
-                    if (SaveAsyncTask(URL_CLIENT, Gson().toJson(viewModel.clientLiveData.value)).execute().get() == RESPONSE_OK) {
-                        showToast(activity!!.baseContext, resources.getString(R.string.success_create_user))
-                    } else {
-                        showToast(activity!!.baseContext, resources.getString(R.string.error_create_user))
-                    }
+                    Volley.newRequestQueue(activity!!.baseContext).add(object : JsonObjectRequest(
+                            Method.POST,
+                            URL_CLIENT,
+                            JSONObject(Gson().toJson(viewModel.clientLiveData.value)),
+                            Response.Listener {
+                                showToast(activity!!.baseContext, resources.getString(R.string.success_create_user))
+                            },
+                            Response.ErrorListener {
+                                showToast(activity!!.baseContext, resources.getString(R.string.error_create_user))
+                            }
+                    ) {
+                        override fun getHeaders(): MutableMap<String, String> {
+                            val headers: MutableMap<String, String> = mutableMapOf()
+                            headers["x-access-token"] = ""
+                            return headers
+                        }
+                    })
                 } else {
                     if (UpdateAsyncTask(URL_CLIENT, Gson().toJson(viewModel.clientLiveData.value)).execute().get() == RESPONSE_OK) {
                         ListAsyncTask(URL_CLIENT).execute()

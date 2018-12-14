@@ -13,6 +13,9 @@ import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.AdapterView
 import android.widget.TextView
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.example.thiagoevoa.estudoandroid.R
 import com.example.thiagoevoa.estudoandroid.activity.ClientDetailActivity
 import com.example.thiagoevoa.estudoandroid.adapter.ClientAdapter
@@ -22,6 +25,10 @@ import com.example.thiagoevoa.estudoandroid.util.*
 import com.example.thiagoevoa.estudoandroid.viewmodel.ClientViewModel
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_client_list.view.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class ClientListFragment : Fragment() {
     internal var view: View? = null
@@ -56,7 +63,7 @@ class ClientListFragment : Fragment() {
                 if (it?.size == 0) {
                     txtMessage?.text = resources.getString(R.string.success_no_client)
                     txtMessage?.visibility = View.VISIBLE
-                }else{
+                } else {
                     txtMessage?.visibility = View.GONE
                 }
                 view?.listView_client_fragment!!.adapter = ClientAdapter(activity!!.baseContext, it!!)
@@ -76,8 +83,21 @@ class ClientListFragment : Fragment() {
         searchView?.maxWidth = Int.MAX_VALUE
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                ListAsyncTask(URL_CLIENT).execute(query)
-                viewModel.clientsLiveData.value = getClientFromJSON(ListAsyncTask.result)
+                refresh?.isRefreshing = true
+                Volley.newRequestQueue(activity!!.baseContext).add(object : StringRequest(
+                        Method.GET,
+                        "$URL_CLIENT/cpf/$query",
+                        Response.Listener {
+                            viewModel.clientsLiveData.value = getClientFromJSON(it)
+                            refresh?.isRefreshing = false
+                        },
+                        Response.ErrorListener {
+                            showToast(activity!!.baseContext, "Deu ruim")
+                            refresh?.isRefreshing = false
+                        }
+                ){
+
+                })
                 return false
             }
 
@@ -150,9 +170,18 @@ class ClientListFragment : Fragment() {
 
     private fun refreshList() {
         view?.swipe_client?.isRefreshing = true
-        ListAsyncTask(URL_CLIENT).execute()
-        viewModel.clientsLiveData.value = getClientFromJSON(ListAsyncTask.result)
-        view?.swipe_client?.isRefreshing = false
+
+        doAsync {
+            val result = getClientFromJSON(
+                    OkHttpClient().newCall(
+                            Request.Builder().url(URL_CLIENT).build()).execute().body()?.string()
+            )
+
+            uiThread {
+                viewModel.clientsLiveData.value = result
+                view?.swipe_client?.isRefreshing = false
+            }
+        }
     }
 
     fun resetMenuIcons() {

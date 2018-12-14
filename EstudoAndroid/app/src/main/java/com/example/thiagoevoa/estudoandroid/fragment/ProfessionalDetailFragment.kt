@@ -11,7 +11,7 @@ import com.example.thiagoevoa.estudoandroid.R
 import com.example.thiagoevoa.estudoandroid.asynctask.SaveAsyncTask
 import com.example.thiagoevoa.estudoandroid.asynctask.UpdateAsyncTask
 import com.example.thiagoevoa.estudoandroid.model.Professional
-import com.example.thiagoevoa.estudoandroid.util.BUNDLE_POSITION
+import com.example.thiagoevoa.estudoandroid.util.BUNDLE_ITEM
 import com.example.thiagoevoa.estudoandroid.util.RESPONSE_OK
 import com.example.thiagoevoa.estudoandroid.util.URL_PROFESSIONAL
 import com.example.thiagoevoa.estudoandroid.util.showToast
@@ -31,7 +31,7 @@ class ProfessionalDetailFragment : Fragment() {
     fun newInstance(professional: Professional?): ProfessionalDetailFragment {
         val fragment = ProfessionalDetailFragment()
         val args = Bundle()
-        args.putParcelable(BUNDLE_POSITION, professional)
+        args.putParcelable(BUNDLE_ITEM, professional)
         fragment.arguments = args
         return fragment
     }
@@ -44,7 +44,7 @@ class ProfessionalDetailFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         view = inflater.inflate(R.layout.fragment_professional_detail, container, false)
-        professional = arguments?.get(BUNDLE_POSITION) as Professional?
+        professional = arguments?.get(BUNDLE_ITEM) as Professional?
         initView()
         viewModel.professionalLiveData.observe(this, Observer {
             view?.edt_professional_cpfcnpj?.setText(it?.cpf_cnpj)
