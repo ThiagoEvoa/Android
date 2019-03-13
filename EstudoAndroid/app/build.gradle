@@ -49,11 +49,11 @@ dependencies {
     //GSON
     implementation 'com.google.code.gson:gson:2.8.5'
     //Firebase Core
-    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-core:16.0.7'
     //Firebase Auth
-    implementation 'com.google.firebase:firebase-auth:16.1.0'
+    implementation 'com.google.firebase:firebase-auth:16.2.0'
     //Firebase Messaging
-    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    implementation 'com.google.firebase:firebase-messaging:17.4.0'
     //Anko AsyncTask
     implementation 'org.jetbrains.anko:anko-common:0.9'
     //Volley
